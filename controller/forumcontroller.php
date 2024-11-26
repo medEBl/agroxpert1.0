@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../model/forummodel.php');
 
 class ForumpostController
 {
+    // List all posts
     public function listpost()
     {
         $sql = "SELECT * FROM forumpost";
@@ -16,6 +17,7 @@ class ForumpostController
         }
     }
 
+    // Delete a post by its ID
     public function deletepost($idpost)
     {
         $sql = "DELETE FROM forumpost WHERE idpost = :idpost";
@@ -36,59 +38,95 @@ class ForumpostController
             die('Error: ' . $e->getMessage());
         }
     }
-    
 
+    // Add a new post to the database
     public function addpost($post)
     {
-        $sql = "INSERT INTO forumpost (titleP, contentP, createDateP, Id_User)
-                VALUES (:titleP, :contentP, :createDateP, :Id_User)";
+        $sql = "INSERT INTO forumpost (titleP, contentP, createDateP, Id_UserP, typeuser, authorname, typepost) 
+                VALUES (:titleP, :contentP, :createDateP, :Id_UserP, :typeuser, :authorname, :typepost)";
+        
         $db = config::getConnexion();
+        
         try {
+            // Prepare the statement
             $query = $db->prepare($sql);
-            $query->execute([
-                'titleP' => $post->getTitle(),
-                'contentP' => $post->getContent(),
-                'createDateP' => $post->getCreateDate()->format('Y-m-d'),
-                'Id_User' => $post->getIdUser()
-            ]);
+            
+            // Bind values from the post object
+            $query->bindValue(':titleP', $post->getTitle());
+            $query->bindValue(':contentP', $post->getContent());
+            $query->bindValue(':createDateP', $post->getCreateDate()->format('Y-m-d H:i:s')); // Format DateTime object
+            $query->bindValue(':Id_UserP', $post->getIdUser());
+            $query->bindValue(':typeuser', $post->getTypeUser());
+            $query->bindValue(':authorname', $post->getAuthorName());
+            $query->bindValue(':typepost', $post->getTypePost());
+
+            // Execute the query
+            $query->execute();
+    
+            // Debugging: Message if post is added successfully
+            echo "Post added successfully!";
+            
         } catch (PDOException $e) {
+            // Catch any errors and display them
             echo 'Error: ' . $e->getMessage();
         }
     }
 
+    // Update an existing post
     public function updatepost($post, $idpost)
     {
         $sql = "UPDATE forumpost SET 
                 titleP = :titleP,
                 contentP = :contentP,
-                createDateP = :createDateP,
-                Id_User = :Id_User
+                updateDateP = :updateDateP,
+                Id_UserP = :Id_UserP,
+                typeuser = :typeuser,
+                authorname = :authorname,
+                typepost = :typepost
                 WHERE idpost = :idpost";
+
         $db = config::getConnexion();
+        
         try {
             $query = $db->prepare($sql);
             $query->execute([
                 'idpost' => $idpost,
                 'titleP' => $post->getTitle(),
                 'contentP' => $post->getContent(),
-                'createDateP' => $post->getCreateDate()->format('Y-m-d'),
-                'Id_User' => $post->getIdUser()
+                'updateDateP' => (new DateTime())->format('Y-m-d H:i:s'), // Update timestamp
+                'Id_UserP' => $post->getIdUser(),
+                'typeuser' => $post->getTypeUser(),
+                'authorname' => $post->getAuthorName(),
+                'typepost' => $post->getTypePost()
             ]);
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
     }
 
-    public function showpost($idpost)
-    {
-        $sql = "SELECT * FROM forumpost WHERE idpost = :idpost";
-        $db = config::getConnexion();
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['idpost' => $idpost]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+    
+    public function getpostbyid($idpost)
+{
+    $sql = "SELECT * FROM forumpost WHERE idpost = :idpost";
+    $db = config::getConnexion();
+    
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['idpost' => $idpost]);
+        
+        // Debugging: Print the result
+        $post = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$post) {
+            echo "No post found with ID: " . $idpost;  // Debugging
         }
+        return $post;
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
     }
 }
+
+
+    
+}
+
+?>
