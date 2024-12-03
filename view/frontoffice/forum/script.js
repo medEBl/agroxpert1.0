@@ -1,160 +1,83 @@
-// Add event listener to handle validation for all comment forms
-document.addEventListener("DOMContentLoaded", () => {
-    const commentForms = document.querySelectorAll("form[action='addcomment.php']");
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to set up validation for a form
+    function setupFormValidation(formId) {
+        const form = document.getElementById(formId);
+        if (!form) return; // Skip if the form doesn't exist
 
-    commentForms.forEach((form) => {
-        const textarea = form.querySelector("textarea[name='contentC']");
-        const submitButton = form.querySelector("button[type='submit']");
+        const errorContainer = document.createElement('div'); // Create a container for errors
+        form.appendChild(errorContainer); // Append the error container to the form
 
-        // Real-time validation feedback
-        textarea.addEventListener("input", () => {
-            const value = textarea.value.trim();
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form submission immediately
 
-            // Clear previous error messages
-            let errorDiv = form.querySelector(".error-message");
-            if (!errorDiv) {
-                errorDiv = document.createElement("div");
-                errorDiv.className = "error-message";
-                form.insertBefore(errorDiv, submitButton);
+            let errors = [];
+
+            // Get values from form fields
+            const userType = document.getElementById('typeuser').value.trim();
+            const postType = document.getElementById('typepost').value.trim();
+            const authorName = document.getElementById('authorname').value.trim();
+            const title = document.getElementById('titrePost').value.trim();
+            const content = document.getElementById('contenuPost').value.trim();
+
+            // Bad words list for content filtering
+            const badWords = ["badword1", "badword2", "badword3"]; // Add more words as needed
+
+            // Validate User Type (must select either Admin or Member)
+            if (userType === '') {
+                errors.push('Please select a user type.');
             }
-            errorDiv.textContent = "";
 
-            // Validation rules
-            if (value === "") {
-                errorDiv.textContent = "The comment cannot be empty.";
-                submitButton.disabled = true;
-            } else if (value.length > 500) {
-                errorDiv.textContent = "The comment must not exceed 500 characters.";
-                submitButton.disabled = true;
-            } else if (/[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-                errorDiv.textContent = "The comment contains forbidden characters.";
-                submitButton.disabled = true;
+            // Validate Post Type (must select either Discussion or Question)
+            if (postType === '') {
+                errors.push('Please select a post type.');
+            }
+
+            // Validate Author Name (5-20 characters, letters only)
+            const authorNameRegex = /^[a-zA-Z]{5,20}$/;
+            if (authorName === '') {
+                errors.push('Author name is required.');
+            } else if (!authorNameRegex.test(authorName)) {
+                errors.push('Author name must be between 5 to 20 characters and contain only letters.');
+            }
+
+            // Validate Title (5-255 characters, allows letters, spaces, apostrophes, and periods)
+            const titleRegex = /^[a-zA-Z0-9\s.'-]{5,255}$/;
+            if (title === '') {
+                errors.push('Title is required.');
+            } else if (!titleRegex.test(title)) {
+                errors.push('Title must be between 5 to 255 characters and may contain letters, spaces, apostrophes, and periods.');
+            }
+
+            // Validate Content (at least 20 characters)
+            if (content === '') {
+                errors.push('Content is required.');
+            } else if (content.length < 20) {
+                errors.push('Content must be at least 20 characters long.');
+            }
+
+            // Filter content for bad words
+            badWords.forEach(function(badWord) {
+                const regex = new RegExp(`\\b${badWord}\\b`, 'i');
+                if (regex.test(content)) {
+                    errors.push(`Content contains inappropriate words like "${badWord}".`);
+                }
+            });
+
+            // If there are validation errors, show them and prevent form submission
+            if (errors.length > 0) {
+                errorContainer.innerHTML = '<ul style="color: red;">' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
             } else {
-                submitButton.disabled = false;
+                // Clear previous error messages
+                errorContainer.innerHTML = '';
+
+                // No errors, submit the form
+                form.submit(); // This triggers form submission if there are no errors
             }
         });
+    }
 
-        // Prevent submission if invalid
-        form.addEventListener("submit", (event) => {
-            const value = textarea.value.trim();
-            if (value === "" || value.length > 500 || /[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-                event.preventDefault();
-                alert("Please correct the errors before submitting.");
-            }
-        });
-    });
+    // Set up validation for both forms
+    setupFormValidation('forumForm'); // For adding posts
+    setupFormValidation('updatePostForm'); // For updating posts
 
-    // Confirmation for delete links
-    const deleteLinks = document.querySelectorAll("a.delete");
-    deleteLinks.forEach((link) => {
-        link.addEventListener("click", (event) => {
-            const confirmed = confirm("Are you sure you want to delete this item?");
-            if (!confirmed) {
-                event.preventDefault();
-            }
-        });
-    });
-});
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("forumForm");
-
-    // Form fields
-    const authorNameInput = document.getElementById("authorname");
-    const titleInput = document.getElementById("titrePost");
-    const contentTextarea = document.getElementById("contenuPost");
-    const submitButton = form.querySelector("button[type='submit']");
-
-    // Error messages
-    const errorMessages = {
-        authorname: "Author name must only contain letters and spaces, and be between 2 and 50 characters long.",
-        titrePost: "Title must be between 5 and 100 characters and cannot contain special symbols.",
-        contenuPost: "Content must be at least 10 characters and no more than 1000 characters.",
-        badLanguage: "The content contains inappropriate language. Please revise."
-    };
-
-    // List of banned words (extend this list as needed)
-    const bannedWords = ["badword1", "badword2", "inappropriate", "offensive"];
-
-    // Helper to display error
-    const displayError = (input, message) => {
-        let errorDiv = input.nextElementSibling;
-        if (!errorDiv || !errorDiv.classList.contains("error-message")) {
-            errorDiv = document.createElement("div");
-            errorDiv.className = "error-message";
-            input.parentNode.insertBefore(errorDiv, input.nextSibling);
-        }
-        errorDiv.textContent = message;
-        input.classList.add("invalid");
-    };
-
-    // Helper to clear error
-    const clearError = (input) => {
-        const errorDiv = input.nextElementSibling;
-        if (errorDiv && errorDiv.classList.contains("error-message")) {
-            errorDiv.textContent = "";
-        }
-        input.classList.remove("invalid");
-    };
-
-    // Validation functions
-    const validateAuthorName = () => {
-        const value = authorNameInput.value.trim();
-        if (!/^[a-zA-Z ]{2,30}$/.test(value)) {
-            displayError(authorNameInput, errorMessages.authorname);
-            return false;
-        }
-        clearError(authorNameInput);
-        return true;
-    };
-
-    const validateTitle = () => {
-        const value = titleInput.value.trim();
-        if (value.length < 5 || value.length > 60 || /[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-            displayError(titleInput, errorMessages.titrePost);
-            return false;
-        }
-        clearError(titleInput);
-        return true;
-    };
-
-    const validateContent = () => {
-        const value = contentTextarea.value.trim();
-
-        // Length validation
-        if (value.length < 10 || value.length > 1000) {
-            displayError(contentTextarea, errorMessages.contenuPost);
-            return false;
-        }
-
-        // Bad language filtering
-        const lowerCasedValue = value.toLowerCase();
-        const containsBadLanguage = bannedWords.some((word) =>
-            lowerCasedValue.includes(word)
-        );
-
-        if (containsBadLanguage) {
-            displayError(contentTextarea, errorMessages.badLanguage);
-            return false;
-        }
-
-        clearError(contentTextarea);
-        return true;
-    };
-
-    // Real-time validation
-    authorNameInput.addEventListener("input", validateAuthorName);
-    titleInput.addEventListener("input", validateTitle);
-    contentTextarea.addEventListener("input", validateContent);
-
-    // Form submission validation
-    form.addEventListener("submit", (event) => {
-        const isAuthorValid = validateAuthorName();
-        const isTitleValid = validateTitle();
-        const isContentValid = validateContent();
-
-        if (!isAuthorValid || !isTitleValid || !isContentValid) {
-            event.preventDefault();
-            alert("Please fix the errors in the form before submitting.");
-        }
-    });
 });
