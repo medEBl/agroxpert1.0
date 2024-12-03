@@ -233,10 +233,11 @@ $list = $forumpostC->listpost();
 
                                     <!-- Add Comment Form -->
                                     <form action="addcomment.php" method="POST">
-                                        <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
-                                        <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
-                                        <button type="submit">Ajouter Commentaire</button>
-                                    </form>
+    <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
+    <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
+    <button type="submit">Ajouter Commentaire</button>
+</form>
+
                                 </article>
                             <?php } ?>
                         <?php } else { ?>
@@ -513,5 +514,6 @@ form button:hover {
             
       </script>
       
+      <script src="comment.js"></script>
    </body>
 </html>

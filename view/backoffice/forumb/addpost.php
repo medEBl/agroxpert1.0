@@ -57,20 +57,22 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
             <form id="forumForm" method="POST" action="">
                 <!-- User Type Dropdown -->
                 <label for="typeuser">Type d'utilisateur:</label>
-                <select id="typeuser" name="typeuser" required>
-                    <option value="Admin">Admin</option>
-                    <option value="Member">Member</option>
-                </select>
+<select id="typeuser" name="typeuser" required>
+    <option value="">Select User Type</option> <!-- Invalid default -->
+    <option value="Admin">Admin</option>
+    <option value="Member">Member</option>
+</select>
 
                 <label for="authorname">Nom de l'Auteur:</label>
                 <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
 
                 <!-- Post Type Dropdown -->
                 <label for="typepost">Type de Post:</label>
-                <select id="typepost" name="typepost" required>
-                    <option value="Discussion">Discussion</option>
-                    <option value="Question">Question</option>
-                </select>
+<select id="typepost" name="typepost" required>
+    <option value="">Select Post Type</option> <!-- Invalid default -->
+    <option value="Discussion">Discussion</option>
+    <option value="Question">Question</option>
+</select>
 
                 <label for="titrePost">Titre :</label>
                 <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
@@ -82,5 +84,7 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
             </form>
         </div>
     </div>
+    <script src="script.js"></script>
+
 </body>
 </html>

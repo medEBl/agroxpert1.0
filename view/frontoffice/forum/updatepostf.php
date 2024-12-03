@@ -304,51 +304,63 @@ form button:hover {
     <!-- header section end -->
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
-    <div class="container">
-        <div class="main-content">
-            <header>
-                <h1>Update Forum Post</h1>
-            </header>
+   <div class="container">
+    <div class="main-content">
+        <header>
+            <h1>Update Forum Post</h1>
+        </header>
 
-            <!-- Error Message -->
-            <?php if (!empty($error)) : ?>
-                <p style="color: red;"><?= htmlspecialchars($error); ?></p>
-            <?php endif; ?>
+        <!-- Error Message -->
+        <?php if (!empty($error)) : ?>
+            <p style="color: red;"><?= htmlspecialchars($error); ?></p>
+        <?php endif; ?>
 
-            <?php if ($post) : ?>
-                <form action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
-                    <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
+        <?php if ($post) : ?>
+            <form id="updatePostForm" action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
+                <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
 
-                    <!-- User Type Dropdown -->
-                    <label for="typeuser">Type d'utilisateur:</label>
-                    <select id="typeuser" name="typeuser" required>
-                        <option value="Admin" <?= $post['typeuser'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                        <option value="Member" <?= $post['typeuser'] == 'Member' ? 'selected' : ''; ?>>Member</option>
-                    </select>
+                <!-- User Type Dropdown -->
+                <label for="typeuser">Type d'utilisateur:</label>
+                <select id="typeuser" name="typeuser" required>
+                    <option value="" disabled>Select User Type</option>
+                    <option value="Admin" <?= $post['typeuser'] === 'Admin' ? 'selected' : ''; ?>>Admin</option>
+                    <option value="Member" <?= $post['typeuser'] === 'Member' ? 'selected' : ''; ?>>Member</option>
+                </select>
 
-                    <label for="authorname">Nom de l'Auteur:</label>
-                    <input type="text" id="authorname" name="authorname" value="<?= htmlspecialchars($post['authorname']); ?>" required>
+                <!-- Author Name -->
+                <label for="authorname">Nom de l'Auteur:</label>
+                <input type="text" id="authorname" name="authorname" 
+                       value="<?= htmlspecialchars($post['authorname']); ?>" 
+                       placeholder="Enter author name (5-20 letters)" required>
 
-                    <!-- Post Type Dropdown -->
-                    <label for="typepost">Type de Post:</label>
-                    <select id="typepost" name="typepost" required>
-                        <option value="Discussion" <?= $post['typepost'] == 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
-                        <option value="Question" <?= $post['typepost'] == 'Question' ? 'selected' : ''; ?>>Question</option>
-                    </select>
+                <!-- Post Type Dropdown -->
+                <label for="typepost">Type de Post:</label>
+                <select id="typepost" name="typepost" required>
+                    <option value="" disabled>Select Post Type</option>
+                    <option value="Discussion" <?= $post['typepost'] === 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
+                    <option value="Question" <?= $post['typepost'] === 'Question' ? 'selected' : ''; ?>>Question</option>
+                </select>
 
-                    <label for="titrePost">Titre :</label>
-                    <input type="text" id="titrePost" name="titrePost" value="<?= htmlspecialchars($post['titleP']); ?>" required>
+                <!-- Post Title -->
+                <label for="titrePost">Titre :</label>
+                <input type="text" id="titrePost" name="titrePost" 
+                       value="<?= htmlspecialchars($post['titleP']); ?>" 
+                       placeholder="Enter a title (5-255 characters)" required>
 
-                    <label for="contenuPost">Contenu :</label>
-                    <textarea id="contenuPost" name="contenuPost" rows="5" required><?= htmlspecialchars($post['contentP']); ?></textarea>
+                <!-- Post Content -->
+                <label for="contenuPost">Contenu :</label>
+                <textarea id="contenuPost" name="contenuPost" rows="5" required 
+                          placeholder="Enter content (minimum 20 characters)"><?= htmlspecialchars($post['contentP']); ?></textarea>
 
-                    <button type="submit">Update Post</button>
-                </form>
-            <?php else : ?>
-                <p>No post found to update.</p>
-            <?php endif; ?>
-        </div>
+                <!-- Submit Button -->
+                <button type="submit">Update Post</button>
+            </form>
+        <?php else : ?>
+            <p>No post found to update.</p>
+        <?php endif; ?>
     </div>
+</div>
+
 
 
 
@@ -418,25 +430,8 @@ form button:hover {
       </div>
       <!-- copyright section end -->    
       <!-- Javascript files-->
-      <script src="js/jquery.min.js"></script>
-      <script src="js/popper.min.js"></script>
-      <script src="js/bootstrap.bundle.min.js"></script>
-      <script src="js/jquery-3.0.0.min.js"></script>
-      <script src="js/plugin.js"></script>
-      <!-- sidebar -->
-      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-      <script src="js/custom.js"></script>
-      <!-- javascript --> 
-      <script src="js/owl.carousel.js"></script>
-      <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-      <script>
-        function example() {
-  if (true) {
-    console.log('Hello');
-  } // Closing the 'if' block
-} // Closing the function block
+     
+      <script src="script.js"></script>
 
-            
-      </script>
    </body>
 </html>
