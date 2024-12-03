@@ -150,53 +150,46 @@
     </div>
     <!-- header section end -->
     <!-- services section start -->
-    <div class="services_section layout_padding">
-        <div class="container">
-            <h1 class="services_taital">Services</h1>
-            <div class="services_section_2 layout_padding">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="image_main active">
-                            <img src="images/img-2.png" class="image_2">
-                            <h2 class="vegetable_text">MarketPlace</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="image_main">
-                            <img src="images/blog.png" class="image_2">
-                            <h2 class="vegetable_text">Blogs</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="image_main">
-                            <img src="images/durable.jpg" class="image_2">
-                            <h2 class="vegetable_text"> Éducation à l’Agriculture Durable</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="services_section_3 layout_padding">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="image_main">
-                            <img src="images/weather.jpg" class="image_2">
-                            <h2 class="vegetable_text">Weather Alerts</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="image_main">
-                            <img src="images/forum.jpg" class="image_2">
-                            <h2 class="vegetable_text">Forum</h2>
-                        </div>
-                    </div>
+    <div class=container><?php
+require_once(__DIR__ . '/../../../controller/ForumeventController.php');
 
-                </div>
-            </div>
-            <div class="read_bt_1">
-                <a href="#">Go Up</a>
-            </div>
-        </div>
-    </div>
+// Instantiate the controller
+$forumeventController = new ForumeventController();
+
+// Fetch the list of events
+$events = $forumeventController->listevent();
+
+// Display the events in a table with a "Participate" button
+echo "<h1>List of Events</h1>";
+
+// Add "Add Event" button at the top
+echo "<a href='createevent.php'><button>Add Event</button></a><br><br>";
+
+echo "<table border='1'>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>";
+
+// Loop through the events and display each one with a participate button
+foreach ($events as $event) {
+    echo "<tr>
+            <td>" . $event['id'] . "</td>
+            <td>" . $event['name'] . "</td>
+            <td>" . $event['description'] . "</td>
+            <td>
+                <!-- Participate Button, links to addParticipant.php -->
+                <a href='addParticipant.php?event_id=" . $event['id'] . "'>Participate</a> | 
+                <a href='updateevent.php?id=" . $event['id'] . "'>Edit</a> | 
+                <a href='deleteevent.php?id=" . $event['id'] . "'>Delete</a>
+            </td>
+        </tr>";
+}
+
+echo "</table>";
+?>
     <!-- services section end -->
     <!-- about section start -->
     <div class="about_section layout_padding">
