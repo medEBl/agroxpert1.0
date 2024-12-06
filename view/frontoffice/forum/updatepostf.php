@@ -316,34 +316,38 @@ form button:hover {
             <?php endif; ?>
 
             <?php if ($post) : ?>
-                <form action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
-                    <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
+                <form id="updateForm" action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
+    <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
 
-                    <!-- User Type Dropdown -->
-                    <label for="typeuser">Type d'utilisateur:</label>
-                    <select id="typeuser" name="typeuser" required>
-                        <option value="Admin" <?= $post['typeuser'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                        <option value="Member" <?= $post['typeuser'] == 'Member' ? 'selected' : ''; ?>>Member</option>
-                    </select>
+    <!-- User Type Dropdown -->
+    <label for="typeuser">Type d'utilisateur:</label>
+    <select id="typeuser" name="typeuser" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Admin" <?= $post['typeuser'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
+        <option value="Member" <?= $post['typeuser'] == 'Member' ? 'selected' : ''; ?>>Member</option>
+    </select>
 
-                    <label for="authorname">Nom de l'Auteur:</label>
-                    <input type="text" id="authorname" name="authorname" value="<?= htmlspecialchars($post['authorname']); ?>" required>
+    <label for="authorname">Nom de l'Auteur:</label>
+    <input type="text" id="authorname" name="authorname" value="<?= htmlspecialchars($post['authorname']); ?>" required>
 
-                    <!-- Post Type Dropdown -->
-                    <label for="typepost">Type de Post:</label>
-                    <select id="typepost" name="typepost" required>
-                        <option value="Discussion" <?= $post['typepost'] == 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
-                        <option value="Question" <?= $post['typepost'] == 'Question' ? 'selected' : ''; ?>>Question</option>
-                    </select>
+    <!-- Post Type Dropdown -->
+    <label for="typepost">Type de Post:</label>
+    <select id="typepost" name="typepost" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Discussion" <?= $post['typepost'] == 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
+        <option value="Question" <?= $post['typepost'] == 'Question' ? 'selected' : ''; ?>>Question</option>
+    </select>
 
-                    <label for="titrePost">Titre :</label>
-                    <input type="text" id="titrePost" name="titrePost" value="<?= htmlspecialchars($post['titleP']); ?>" required>
+    <label for="titrePost">Titre :</label>
+    <input type="text" id="titrePost" name="titrePost" value="<?= htmlspecialchars($post['titleP']); ?>" required>
 
-                    <label for="contenuPost">Contenu :</label>
-                    <textarea id="contenuPost" name="contenuPost" rows="5" required><?= htmlspecialchars($post['contentP']); ?></textarea>
+    <label for="contenuPost">Contenu :</label>
+    <textarea id="contenuPost" name="contenuPost" rows="5" required><?= htmlspecialchars($post['contentP']); ?></textarea>
 
-                    <button type="submit">Update Post</button>
-                </form>
+    <button type="submit">Update Post</button>
+    <div id="errorMessages" style="color: red; margin-top: 10px;"></div>
+</form>
+
             <?php else : ?>
                 <p>No post found to update.</p>
             <?php endif; ?>
@@ -427,6 +431,7 @@ form button:hover {
       <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
       <script src="js/custom.js"></script>
       <!-- javascript --> 
+      <script src="script.js"></script>
       <script src="js/owl.carousel.js"></script>
       <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
       <script>

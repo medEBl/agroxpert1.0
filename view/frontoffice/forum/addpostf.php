@@ -197,31 +197,34 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
             <?php endif; ?>
 
             <form id="forumForm" method="POST" action="">
-                <!-- User Type Dropdown -->
-                <label for="typeuser">Type d'utilisateur:</label>
-                <select id="typeuser" name="typeuser" required>
-                    <option value="Admin">Admin</option>
-                    <option value="Member">Member</option>
-                </select>
+    <!-- User Type Dropdown -->
+    <label for="typeuser">Type d'utilisateur:</label>
+    <select id="typeuser" name="typeuser" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Admin">Admin</option>
+        <option value="Member">Member</option>
+    </select>
 
-                <label for="authorname">Nom de l'Auteur:</label>
-                <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
+    <label for="authorname">Nom de l'Auteur:</label>
+    <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
 
-                <!-- Post Type Dropdown -->
-                <label for="typepost">Type de Post:</label>
-                <select id="typepost" name="typepost" required>
-                    <option value="Discussion">Discussion</option>
-                    <option value="Question">Question</option>
-                </select>
+    <!-- Post Type Dropdown -->
+    <label for="typepost">Type de Post:</label>
+    <select id="typepost" name="typepost" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Discussion">Discussion</option>
+        <option value="Question">Question</option>
+    </select>
 
-                <label for="titrePost">Titre :</label>
-                <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
+    <label for="titrePost">Titre :</label>
+    <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
 
-                <label for="contenuPost">Contenu :</label>
-                <textarea id="contenuPost" name="contenuPost" rows="5" placeholder="Contenu du post" required></textarea>
+    <label for="contenuPost">Contenu :</label>
+    <textarea id="contenuPost" name="contenuPost" rows="5" placeholder="Contenu du post" required></textarea>
 
-                <button type="submit">Enregistrer</button>
-            </form>
+    <button type="submit">Enregistrer</button>
+    <div id="errorMessages" style="color: red; margin-top: 10px;"></div>
+</form>
         </div>
     </div>
 <style>/* General Container Styling */
@@ -391,6 +394,7 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
       <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
       <script src="js/custom.js"></script>
       <!-- javascript --> 
+      <script src="script.js"></script>
       <script src="js/owl.carousel.js"></script>
       <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
       <script>

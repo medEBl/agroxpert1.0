@@ -198,8 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST">
                 <div>
                     <p><strong>Commentaire par:</strong> <?= htmlspecialchars($comment['authorname']) ?></p>
-                    <p><strong>Nombre de Likes:</strong> <?= htmlspecialchars($comment['nblikec']) ?></p>
-                    <p><strong>Nombre de Dislikes:</strong> <?= htmlspecialchars($comment['nbdislikec']) ?></p>
+                    
                 </div>
 
                 <div>

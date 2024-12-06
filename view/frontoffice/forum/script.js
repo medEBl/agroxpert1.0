@@ -1,160 +1,64 @@
-// Add event listener to handle validation for all comment forms
-document.addEventListener("DOMContentLoaded", () => {
-    const commentForms = document.querySelectorAll("form[action='addcomment.php']");
+// List of bad words (expand this list as needed)
+const badWords = ['badword1', 'badword2', 'badword3'];
 
-    commentForms.forEach((form) => {
-        const textarea = form.querySelector("textarea[name='contentC']");
-        const submitButton = form.querySelector("button[type='submit']");
+// Validation function for both forms
+function validateForm(event) {
+    event.preventDefault(); // Prevent form submission for validation
 
-        // Real-time validation feedback
-        textarea.addEventListener("input", () => {
-            const value = textarea.value.trim();
+    // Clear previous error messages
+    const errorMessagesDiv = document.getElementById("errorMessages");
+    errorMessagesDiv.innerHTML = "";
 
-            // Clear previous error messages
-            let errorDiv = form.querySelector(".error-message");
-            if (!errorDiv) {
-                errorDiv = document.createElement("div");
-                errorDiv.className = "error-message";
-                form.insertBefore(errorDiv, submitButton);
-            }
-            errorDiv.textContent = "";
+    // Get the form element
+    const form = event.target;
 
-            // Validation rules
-            if (value === "") {
-                errorDiv.textContent = "The comment cannot be empty.";
-                submitButton.disabled = true;
-            } else if (value.length > 500) {
-                errorDiv.textContent = "The comment must not exceed 500 characters.";
-                submitButton.disabled = true;
-            } else if (/[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-                errorDiv.textContent = "The comment contains forbidden characters.";
-                submitButton.disabled = true;
-            } else {
-                submitButton.disabled = false;
-            }
-        });
+    // Get form values
+    const typeUser = form.typeuser.value;
+    const typePost = form.typepost.value;
+    const title = form.titrePost.value;
+    const authorName = form.authorname.value;
+    const content = form.contenuPost.value;
 
-        // Prevent submission if invalid
-        form.addEventListener("submit", (event) => {
-            const value = textarea.value.trim();
-            if (value === "" || value.length > 500 || /[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-                event.preventDefault();
-                alert("Please correct the errors before submitting.");
-            }
-        });
-    });
+    // Validation array to collect error messages
+    let errorMessages = [];
 
-    // Confirmation for delete links
-    const deleteLinks = document.querySelectorAll("a.delete");
-    deleteLinks.forEach((link) => {
-        link.addEventListener("click", (event) => {
-            const confirmed = confirm("Are you sure you want to delete this item?");
-            if (!confirmed) {
-                event.preventDefault();
-            }
-        });
-    });
-});
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("forumForm");
+    // Validate Type User and Type Post (should not be "Choose...")
+    if (typeUser === "" || typePost === "") {
+        errorMessages.push("Please select a valid 'Type d'utilisateur' and 'Type de Post'.");
+    }
 
-    // Form fields
-    const authorNameInput = document.getElementById("authorname");
-    const titleInput = document.getElementById("titrePost");
-    const contentTextarea = document.getElementById("contenuPost");
-    const submitButton = form.querySelector("button[type='submit']");
+    // Title validation (min 5, max 20 characters, no numbers)
+    if (!/^[A-Za-z\s]{5,20}$/.test(title)) {
+        errorMessages.push("Title must be between 5 and 20 characters, and contain only letters and spaces.");
+    }
 
-    // Error messages
-    const errorMessages = {
-        authorname: "Author name must only contain letters and spaces, and be between 2 and 50 characters long.",
-        titrePost: "Title must be between 5 and 100 characters and cannot contain special symbols.",
-        contenuPost: "Content must be at least 10 characters and no more than 1000 characters.",
-        badLanguage: "The content contains inappropriate language. Please revise."
-    };
+    // Author Name validation (alphanumeric and at least 5 characters)
+    if (!/^[A-Za-z0-9]{5,}$/.test(authorName)) {
+        errorMessages.push("Author name must be at least 5 characters long and contain only letters and numbers.");
+    }
 
-    // List of banned words (extend this list as needed)
-    const bannedWords = ["badword1", "badword2", "inappropriate", "offensive"];
+    // Content validation (min 10, max 200 characters)
+    if (content.length < 10 || content.length > 200) {
+        errorMessages.push("Content must be between 10 and 200 characters.");
+    }
 
-    // Helper to display error
-    const displayError = (input, message) => {
-        let errorDiv = input.nextElementSibling;
-        if (!errorDiv || !errorDiv.classList.contains("error-message")) {
-            errorDiv = document.createElement("div");
-            errorDiv.className = "error-message";
-            input.parentNode.insertBefore(errorDiv, input.nextSibling);
+    // Bad word filtering for content
+    for (const word of badWords) {
+        if (content.toLowerCase().includes(word)) {
+            errorMessages.push("Content contains inappropriate language.");
         }
-        errorDiv.textContent = message;
-        input.classList.add("invalid");
-    };
+    }
 
-    // Helper to clear error
-    const clearError = (input) => {
-        const errorDiv = input.nextElementSibling;
-        if (errorDiv && errorDiv.classList.contains("error-message")) {
-            errorDiv.textContent = "";
-        }
-        input.classList.remove("invalid");
-    };
+    // If there are error messages, show them below the form
+    if (errorMessages.length > 0) {
+        errorMessagesDiv.innerHTML = "<ul>" + errorMessages.map(msg => `<li>${msg}</li>`).join('') + "</ul>";
+        return false; // Don't submit the form if there are errors
+    }
 
-    // Validation functions
-    const validateAuthorName = () => {
-        const value = authorNameInput.value.trim();
-        if (!/^[a-zA-Z ]{2,30}$/.test(value)) {
-            displayError(authorNameInput, errorMessages.authorname);
-            return false;
-        }
-        clearError(authorNameInput);
-        return true;
-    };
+    // If all validations pass, submit the form
+    form.submit();
+}
 
-    const validateTitle = () => {
-        const value = titleInput.value.trim();
-        if (value.length < 5 || value.length > 60 || /[^a-zA-Z0-9 .,!?'-]/.test(value)) {
-            displayError(titleInput, errorMessages.titrePost);
-            return false;
-        }
-        clearError(titleInput);
-        return true;
-    };
-
-    const validateContent = () => {
-        const value = contentTextarea.value.trim();
-
-        // Length validation
-        if (value.length < 10 || value.length > 1000) {
-            displayError(contentTextarea, errorMessages.contenuPost);
-            return false;
-        }
-
-        // Bad language filtering
-        const lowerCasedValue = value.toLowerCase();
-        const containsBadLanguage = bannedWords.some((word) =>
-            lowerCasedValue.includes(word)
-        );
-
-        if (containsBadLanguage) {
-            displayError(contentTextarea, errorMessages.badLanguage);
-            return false;
-        }
-
-        clearError(contentTextarea);
-        return true;
-    };
-
-    // Real-time validation
-    authorNameInput.addEventListener("input", validateAuthorName);
-    titleInput.addEventListener("input", validateTitle);
-    contentTextarea.addEventListener("input", validateContent);
-
-    // Form submission validation
-    form.addEventListener("submit", (event) => {
-        const isAuthorValid = validateAuthorName();
-        const isTitleValid = validateTitle();
-        const isContentValid = validateContent();
-
-        if (!isAuthorValid || !isTitleValid || !isContentValid) {
-            event.preventDefault();
-            alert("Please fix the errors in the form before submitting.");
-        }
-    });
-});
+// Attach the validateForm function to both forms
+document.getElementById("forumForm").addEventListener("submit", validateForm);
+document.getElementById("updateForm").addEventListener("submit", validateForm);

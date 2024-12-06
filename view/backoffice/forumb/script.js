@@ -1,131 +1,64 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const forumForm = document.getElementById('forumpost');
-    const postList = document.getElementById('listpost').querySelector('.cards');
+// List of bad words (expand this list as needed)
+const badWords = ['badword1', 'badword2', 'badword3'];
 
-    // Array to hold posts
-    let posts = [];
+// Validation function for both forms
+function validateForm(event) {
+    event.preventDefault(); // Prevent form submission for validation
 
-    // Function to render posts
-    function renderPosts() {
-        postList.innerHTML = '';
-        posts.forEach((post, postIndex) => {
-            const postCard = document.createElement('div');
-            postCard.classList.add('card');
-            postCard.innerHTML = `
-                <h3>${post.title}</h3>
-                <p>${post.content}</p>
-                <p><strong>Date de création :</strong> ${post.createdAt}</p>
-                <div class="actions">
-                    <a href="#" class="edit" data-index="${postIndex}">Modifier</a>
-                    <a href="#" class="delete" data-index="${postIndex}">Supprimer</a>
-                </div>
-                <div class="comments">
-                    <h4>Commentaires</h4>
-                    <div class="commentList" id="commentList-${postIndex}"></div>
-                    <form class="commentForm" data-index="${postIndex}">
-                        <input type="text" placeholder="Votre commentaire" required>
-                        <button type="submit">Ajouter</button>
-                    </form>
-                </div>
-            `;
-            postList.appendChild(postCard);
-            renderComments(postIndex);
-        });
+    // Clear previous error messages
+    const errorMessagesDiv = document.getElementById("errorMessages");
+    errorMessagesDiv.innerHTML = "";
+
+    // Get the form element
+    const form = event.target;
+
+    // Get form values
+    const typeUser = form.typeuser.value;
+    const typePost = form.typepost.value;
+    const title = form.titrePost.value;
+    const authorName = form.authorname.value;
+    const content = form.contenuPost.value;
+
+    // Validation array to collect error messages
+    let errorMessages = [];
+
+    // Validate Type User and Type Post (should not be "Choose...")
+    if (typeUser === "" || typePost === "") {
+        errorMessages.push("Please select a valid 'Type d'utilisateur' and 'Type de Post'.");
     }
 
-    // Function to render comments
-    function renderComments(postIndex) {
-        const commentList = document.getElementById(`commentList-${postIndex}`);
-        const comments = posts[postIndex].comments || [];
-        commentList.innerHTML = '';
-        comments.forEach((comment, commentIndex) => {
-            const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment');
-            commentDiv.innerHTML = `
-                <p><strong>Auteur :</strong> Utilisateur${commentIndex + 1}</p>
-                <p>${comment}</p>
-                <div class="actions">
-                    <a href="#" class="edit-comment" data-post="${postIndex}" data-index="${commentIndex}">Modifier</a>
-                    <a href="#" class="delete-comment" data-post="${postIndex}" data-index="${commentIndex}">Supprimer</a>
-                </div>
-            `;
-            commentList.appendChild(commentDiv);
-        });
+    // Title validation (min 5, max 20 characters, no numbers)
+    if (!/^[A-Za-z\s]{5,20}$/.test(title)) {
+        errorMessages.push("Title must be between 5 and 20 characters, and contain only letters and spaces.");
     }
 
-    // Handle post submission
-    forumForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const title = forumForm.titleP.value;
-        const content = forumForm.contentP.value;
-        const createdAt = new Date().toLocaleString();
+    // Author Name validation (alphanumeric and at least 5 characters)
+    if (!/^[A-Za-z0-9]{5,}$/.test(authorName)) {
+        errorMessages.push("Author name must be at least 5 characters long and contain only letters and numbers.");
+    }
 
-        posts.push({ title, content, createdAt, comments: [] });
-        forumForm.reset();
-        renderPosts();
-    });
+    // Content validation (min 10, max 200 characters)
+    if (content.length < 10 || content.length > 200) {
+        errorMessages.push("Content must be between 10 and 200 characters.");
+    }
 
-    // Handle post deletion
-    postList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete')) {
-            const index = e.target.dataset.index;
-            posts.splice(index, 1);
-            renderPosts();
+    // Bad word filtering for content
+    for (const word of badWords) {
+        if (content.toLowerCase().includes(word)) {
+            errorMessages.push("Content contains inappropriate language.");
         }
-    });
+    }
 
-    // Handle post editing
-    postList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('edit')) {
-            const index = e.target.dataset.index;
-            const post = posts[index];
-            const newTitle = prompt("Modifier le titre du post :", post.title);
-            const newContent = prompt("Modifier le contenu du post :", post.content);
+    // If there are error messages, show them below the form
+    if (errorMessages.length > 0) {
+        errorMessagesDiv.innerHTML = "<ul>" + errorMessages.map(msg => `<li>${msg}</li>`).join('') + "</ul>";
+        return false; // Don't submit the form if there are errors
+    }
 
-            if (newTitle !== null && newContent !== null) {
-                posts[index].title = newTitle;
-                posts[index].content = newContent;
-                renderPosts();
-            }
-        }
-    });
+    // If all validations pass, submit the form
+    form.submit();
+}
 
-    // Handle comment submission
-    postList.addEventListener('submit', (e) => {
-        if (e.target.classList.contains('commentForm')) {
-            e.preventDefault();
-            const postIndex = e.target.dataset.index;
-            const comment = e.target.querySelector('input').value;
-
-            posts[postIndex].comments.push(comment);
-            e.target.reset();
-            renderComments(postIndex);
-        }
-    });
-
-    // Handle comment deletion
-    postList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete-comment')) {
-            const postIndex = e.target.dataset.post;
-            const commentIndex = e.target.dataset.index;
-
-            posts[postIndex].comments.splice(commentIndex, 1);
-            renderComments(postIndex);
-        }
-    });
-
-    // Handle comment editing
-    postList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('edit-comment')) {
-            const postIndex = e.target.dataset.post;
-            const commentIndex = e.target.dataset.index;
-            const comment = posts[postIndex].comments[commentIndex];
-
-            const newComment = prompt("Modifier votre commentaire :", comment);
-            if (newComment !== null) {
-                posts[postIndex].comments[commentIndex] = newComment;
-                renderComments(postIndex);
-            }
-        }
-    });
-});
+// Attach the validateForm function to both forms
+document.getElementById("forumForm").addEventListener("submit", validateForm);
+document.getElementById("updateForm").addEventListener("submit", validateForm);

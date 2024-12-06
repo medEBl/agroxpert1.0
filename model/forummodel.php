@@ -12,12 +12,14 @@ class ForumPost
     private $updateDateP;
     private $nbviewsp;
     private $nblikesp;
+    private $nbdislikesp;
+    
     private $Id_UserP;//foreign key to id user suposed to be 1
 
     // Constructor with new attributes
     public function __construct($idpost = null, $typeuser = null, $authorname = null, $typepost = null, 
                                 $titleP = null, $contentP = null, $createDateP = null, $updateDateP = null, 
-                                $nbviewsp = 0, $nblikesp = 0, $Id_UserP = null)
+                                $nbviewsp = 0, $nblikesp = 0, $nbdislikesp = 0, $Id_UserP = null)
     {
         $this->idpost = $idpost;
         $this->typeuser = $typeuser;  // New field
@@ -29,6 +31,7 @@ class ForumPost
         $this->updateDateP = $updateDateP;
         $this->nbviewsp = $nbviewsp;
         $this->nblikesp = $nblikesp;
+        $this->nbdislikesp = $nbdislikesp; 
         $this->Id_UserP = $Id_UserP;
     }
 
@@ -152,6 +155,34 @@ class ForumPost
     {
         $this->Id_UserP = $Id_UserP;
     }
+    // Increase views by one
+    public function incrementViews()
+    {
+        $this->nbviewsp += 1;
+    }
+
+    // Increase likes by one
+    public function incrementLikes()
+    {
+        $this->nblikesp += 1;
+    }
+       // Getter and Setter for nbdislikesp (Dislikes)
+       public function getNbDislikes()
+       {
+           return $this->nbdislikesp;
+       }
+   
+       public function setNbDislikes($nbdislikesp)
+       {
+           $this->nbdislikesp = $nbdislikesp;
+       }
+   
+       // Method to increase dislikes by one
+       public function incrementDislikes()
+       {
+           $this->nbdislikesp += 1;
+       }
+
 }
 
 ?>

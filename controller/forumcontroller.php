@@ -28,7 +28,7 @@ class ForumpostController
             $req->bindValue(':idpost', $idpost, PDO::PARAM_INT); // Ensure it's an integer
             $req->execute();
     
-            // Debug: Check if rows are affected
+            // Debugging: Check if rows are affected
             if ($req->rowCount() > 0) {
                 echo "Post with ID $idpost deleted successfully."; // Debugging
             } else {
@@ -63,11 +63,9 @@ class ForumpostController
             // Execute the query
             $query->execute();
     
-            // Debugging: Message if post is added successfully
             echo "Post added successfully!";
             
         } catch (PDOException $e) {
-            // Catch any errors and display them
             echo 'Error: ' . $e->getMessage();
         }
     }
@@ -104,29 +102,110 @@ class ForumpostController
         }
     }
 
+    // Increment the number of views for a post
+    public function incrementViews($idpost)
+    {
+        $sql = "UPDATE forumpost SET nbviewsp = nbviewsp + 1 WHERE idpost = :idpost";
+        $db = config::getConnexion();
     
-    public function getpostbyid($idpost)
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':idpost', $idpost, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    // Increment the number of likes for a post
+    public function incrementLikes($idpost)
+    {
+        $sql = "UPDATE forumpost SET nblikesp = nblikesp + 1 WHERE idpost = :idpost";
+        $db = config::getConnexion();
+    
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':idpost', $idpost, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+    // Increment the number of dislikes for a post
+public function incrementDislikes($idpost)
 {
-    $sql = "SELECT * FROM forumpost WHERE idpost = :idpost";
+    $sql = "UPDATE forumpost SET nbdislikesp = nbdislikesp + 1 WHERE idpost = :idpost";
     $db = config::getConnexion();
-    
+
     try {
         $stmt = $db->prepare($sql);
-        $stmt->execute(['idpost' => $idpost]);
-        
-        // Debugging: Print the result
-        $post = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$post) {
-            echo "No post found with ID: " . $idpost;  // Debugging
-        }
-        return $post;
+        $stmt->bindValue(':idpost', $idpost, PDO::PARAM_INT); // Bind the post ID as an integer
+        $stmt->execute();
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
     }
 }
 
 
+    // Get a post by its ID
+    public function getpostbyid($idpost)
+    {
+        $sql = "SELECT * FROM forumpost WHERE idpost = :idpost";
+        $db = config::getConnexion();
     
-}
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute(['idpost' => $idpost]);
+            
+            // Fetch the post
+            $post = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$post) {
+                echo "No post found with ID: " . $idpost;
+            }
+            return $post;
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
 
+    // List all posts sorted by views (optional - for most viewed posts)
+    public function listPostsByViews()
+    {
+        $sql = "SELECT * FROM forumpost ORDER BY nbviewsp DESC";
+        $db = config::getConnexion();
+        try {
+            $liste = $db->query($sql);
+            return $liste;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+
+    // List all posts sorted by likes (optional - for most liked posts)
+    public function listPostsByLikes()
+    {
+        $sql = "SELECT * FROM forumpost ORDER BY nblikesp DESC";
+        $db = config::getConnexion();
+        try {
+            $liste = $db->query($sql);
+            return $liste;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    // Increment the number of dislikes for a post
+
+public function listPostsByDislikes()
+    {
+        $sql = "SELECT * FROM forumpost ORDER BY nbdislikes DESC";
+        $db = config::getConnexion();
+        try {
+            $liste = $db->query($sql);
+            return $liste;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+
+}
 ?>
