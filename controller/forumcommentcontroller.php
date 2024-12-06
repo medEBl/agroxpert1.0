@@ -121,6 +121,54 @@ class ForumCommentController
             return false;
         }
     }
+    public function updateEmoji($idcommentp, $emoji)
+{
+    $sql = "UPDATE forumcomment SET emoji = :emoji WHERE idcommentp = :idcommentp";
+    $db = config::getConnexion();
+
+    try {
+        $query = $db->prepare($sql);
+        $query->bindValue(':emoji', $emoji);
+        $query->bindValue(':idcommentp', $idcommentp, PDO::PARAM_INT);
+        $query->execute();
+        echo "Emoji updated successfully!";
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+public function getEmoji($idcommentp)
+{
+    $sql = "SELECT emoji FROM forumcomment WHERE idcommentp = :idcommentp";
+    $db = config::getConnexion();
+
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['idcommentp' => $idcommentp]);
+        $emoji = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $emoji ? $emoji['emoji'] : null;
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+public function incrementEmojiCount($idcommentp)
+{
+    $sql = "UPDATE forumcomment SET emoji = emoji + 1 WHERE idcommentp = :idcommentp";
+    $db = config::getConnexion();
+
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':idcommentp', $idcommentp, PDO::PARAM_INT);
+        $stmt->execute();
+        return true; // You can return a success value or handle as needed
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+        return false; // Handle error if needed
+    }
+}
+
+
+
+
 
 }
 
