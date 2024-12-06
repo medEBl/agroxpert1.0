@@ -59,7 +59,6 @@ $list = $forumpostC->listpost();
                                         <p><strong>Type d'utilisateur:</strong> <?= htmlspecialchars($post['typeuser']); ?></p>
                                     </header>
 
-                                    <!-- View more button to show full content and comments -->
                                     <button class="view-button" onclick="togglePostDetails(<?= $post['idpost']; ?>)">Voir le Post</button>
                                     <div id="post-details-<?= $post['idpost']; ?>" class="post-details" style="display: none;">
                                         <section>
@@ -72,25 +71,25 @@ $list = $forumpostC->listpost();
                                             <?php if (isset($post['updateDateP'])): ?>
                                                 <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
                                             <?php endif; ?>
-                                            <!-- Views and Likes Count -->
                                             <p><strong>Vues:</strong> <span id="view-count-<?= $post['idpost']; ?>"><?= htmlspecialchars($post['nbviewsp']); ?></span></p>
                                             <p><strong>Likes:</strong> <?= htmlspecialchars($post['nblikesp']); ?></p>
                                             <p><strong>Dislikes:</strong> <?= htmlspecialchars($post['nbdislikesp']); ?></p>
                                         </footer>
 
-                                        <!-- Like Button -->
                                         <form action="likepost.php" method="POST" style="display: inline;">
                                             <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
                                             <button type="submit">Like</button>
                                         </form>
-
-                                        <!-- Dislike Button -->
                                         <form action="dislikepost.php" method="POST" style="display: inline;">
                                             <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
                                             <button type="submit">Dislike</button>
                                         </form>
 
-                                        <!-- Button to toggle comments visibility -->
+                                        <div class="actions">
+                                            <a href="updatepost.php?idpost=<?= $post['idpost']; ?>" class="edit">Modifier</a>
+                                            <a href="deletepost.php?idpost=<?= $post['idpost']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Supprimer</a>
+                                        </div>
+
                                         <button class="view-comments-button" onclick="toggleComments(<?= $post['idpost']; ?>)">Voir les Commentaires</button>
 
                                         <div id="comments-<?= $post['idpost']; ?>" class="comments" style="display: none;">
@@ -105,10 +104,20 @@ $list = $forumpostC->listpost();
                                                         <?php if (isset($comment['updateDateC'])): ?>
                                                             <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
                                                         <?php endif; ?>
-                                                        <p><small>Likes: <?= htmlspecialchars($comment['nblikec']); ?>, Dislikes: <?= htmlspecialchars($comment['nbdislikec']); ?></small></p>
-                                                        <div class="comment-actions">
-                                                            <a href="updatecommentf.php?idcommentp=<?= $comment['idcommentp']; ?>" class="edit">Modifier</a>
-                                                            <a href="deletecommentf.php?idcommentp=<?= $comment['idcommentp']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this comment?');">Supprimer</a>
+
+                                                        <!-- Reaction Options -->
+                                                        <p>
+                                                            ❤️ <span id="heart-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
+                                                            👍 <span id="thumbs-up-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
+                                                            👎 <span id="thumbs-down-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
+                                                            😂 <span id="laugh-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
+                                                        </p>
+
+                                                        <div>
+                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'heart')">❤️</button>
+                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'thumbs_up')">👍</button>
+                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'thumbs_down')">👎</button>
+                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'laugh')">😂</button>
                                                         </div>
                                                     </div>
                                                 <?php }
@@ -118,7 +127,6 @@ $list = $forumpostC->listpost();
                                             ?>
                                         </div>
 
-                                        <!-- Add Comment Form -->
                                         <form action="addcommentf.php" method="POST">
                                             <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
                                             <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
@@ -137,16 +145,12 @@ $list = $forumpostC->listpost();
     </div>
 
     <script>
-        // Function to handle toggle post details visibility and increment views
         function togglePostDetails(postId) {
             const postDetails = document.getElementById('post-details-' + postId);
             const viewCount = document.getElementById('view-count-' + postId);
 
-            // Toggle visibility of the post details
             if (postDetails.style.display === "none") {
                 postDetails.style.display = "block";
-
-                // Increment the view count (you can also call the backend to update the view count in the database)
                 fetch('incrementview.php?idpost=' + postId)
                     .then(response => response.json())
                     .then(data => {
@@ -159,16 +163,30 @@ $list = $forumpostC->listpost();
             }
         }
 
-        // Function to handle toggle comments visibility
         function toggleComments(postId) {
             const comments = document.getElementById('comments-' + postId);
+            comments.style.display = comments.style.display === "none" ? "block" : "none";
+        }
 
-            // Toggle visibility of comments
-            if (comments.style.display === "none") {
-                comments.style.display = "block";
-            } else {
-                comments.style.display = "none";
-            }
+        function reactToComment(commentId, reactionType) {
+            fetch('reactcomment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `idcommentp=${commentId}&reaction=${reactionType}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const emojiSpan = document.getElementById(`${reactionType}-${commentId}`);
+                    emojiSpan.innerText = parseInt(emojiSpan.innerText) + 1;
+                } else {
+                    alert(data.message || 'Failed to react to the comment.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while reacting to the comment.');
+            });
         }
     </script>
 </body>

@@ -163,16 +163,19 @@ $list = $forumpostC->listpost();
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
   <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
-    <div class="main-content">
-            
+  
+    
 
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
                 <h1> Gestion des Forums</h1>
                 <div class="add-post">
-        <form action="addpostf.php" method="GET" style="text-align: right;">
-            <button style="text-align:center" type="submit" class="add-comment-btn">Ajouter un Post</button>
-        </form>
-    </div>
-            
+                    <form action="addpostf.php" method="GET" style="text-align: right;">
+                        <button type="submit" class="add-comment-btn">Ajouter un Post</button>
+                    </form>
+                </div>
+            </header>
 
             <main>
                 <h2>Liste des Posts</h2>
@@ -182,61 +185,75 @@ $list = $forumpostC->listpost();
                         <?php if ($list) { ?>
                             <?php foreach ($list as $post) { ?>
                                 <article class="card">
-                                    
+                                    <header>
                                         <h3><?= htmlspecialchars($post['titleP']); ?></h3>
                                         <p><strong>Auteur:</strong> <?= htmlspecialchars($post['authorname']); ?></p>
                                         <p><strong>Type d'utilisateur:</strong> <?= htmlspecialchars($post['typeuser']); ?></p>
-                                    
+                                    </header>
 
-                                    <section>
-                                        <p><strong>Type de Post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
-                                        <p><?= htmlspecialchars($post['contentP']); ?></p>
-                                    </section>
+                                    <!-- View more button to show full content and comments -->
+                                    <button class="view-button" onclick="togglePostDetails(<?= $post['idpost']; ?>)">Voir le Post</button>
+                                    <div id="post-details-<?= $post['idpost']; ?>" class="post-details" style="display: none;">
+                                        <section>
+                                            <p><strong>Type de Post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
+                                            <p><?= htmlspecialchars($post['contentP']); ?></p>
+                                        </section>
 
-                                    <footer>
-                                        <p><strong>Date de création:</strong> <?= htmlspecialchars($post['createDateP']); ?></p>
-                                        <?php if (isset($post['updateDateP'])): ?>
-                                            <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
-                                        <?php endif; ?>
-                                    </footer>
+                                        <footer>
+                                            <p><strong>Date de création:</strong> <?= htmlspecialchars($post['createDateP']); ?></p>
+                                            <?php if (isset($post['updateDateP'])): ?>
+                                                <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
+                                            <?php endif; ?>
+                                            <!-- Views and Likes Count -->
+                                            <p><strong>Vues:</strong> <span id="view-count-<?= $post['idpost']; ?>"><?= htmlspecialchars($post['nbviewsp']); ?></span></p>
+                                            <p><strong>Likes:</strong> <?= htmlspecialchars($post['nblikesp']); ?></p>
+                                            <p><strong>Dislikes:</strong> <?= htmlspecialchars($post['nbdislikesp']); ?></p>
+                                        </footer>
 
-                                    <!-- Actions Section -->
-                                    <div class="actions">
-                                        <a href="updatepostf.php?idpost=<?= $post['idpost']; ?>" class="edit">Modifier</a>
-                                        <a href="deletepostf.php?idpost=<?= $post['idpost']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Supprimer</a>
+                                        <!-- Like Button -->
+                                        <form action="../../backoffice/forumb/likepost.php" method="POST" style="display: inline;">
+                                            <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                            <button type="submit">Like</button>
+                                        </form>
+
+                                        <!-- Dislike Button -->
+                                        <form action="../../backoffice/forumb/dislikepost.php" method="POST" style="display: inline;">
+                                            <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                            <button type="submit">Dislike</button>
+                                        </form>
+
+                                        <!-- Button to toggle comments visibility -->
+                                        <button class="view-comments-button" onclick="toggleComments(<?= $post['idpost']; ?>)">Voir les Commentaires</button>
+
+                                        <div id="comments-<?= $post['idpost']; ?>" class="comments" style="display: none;">
+                                            <?php
+                                            $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
+                                            if ($comments) {
+                                                foreach ($comments as $comment) { ?>
+                                                    <div class="comment">
+                                                        <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
+                                                        <p><?= htmlspecialchars($comment['contentC']); ?></p>
+                                                        <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
+                                                        <?php if (isset($comment['updateDateC'])): ?>
+                                                            <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
+                                                        <?php endif; ?>
+                                                       
+                                                        
+                                                    </div>
+                                                <?php }
+                                            } else {
+                                                echo "<p>Aucun commentaire.</p>";
+                                            }
+                                            ?>
+                                        </div>
+
+                                        <!-- Add Comment Form -->
+                                        <form action="addcomment.php" method="POST">
+                                            <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
+                                            <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
+                                            <button type="submit">Ajouter Commentaire</button>
+                                        </form>
                                     </div>
-
-                                    <!-- Display Comments -->
-                                    <h4>Commentaires:</h4>
-                                    <?php
-                                    $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
-                                    if ($comments) {
-                                        foreach ($comments as $comment) { ?>
-                                            <div class="comment">
-                                                <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
-                                                <p><?= htmlspecialchars($comment['contentC']); ?></p>
-                                                <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
-                                                <?php if (isset($comment['updateDateC'])): ?>
-                                                    <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
-                                                <?php endif; ?>
-                                                <p><small>Likes: <?= htmlspecialchars($comment['nblikec']); ?>, Dislikes: <?= htmlspecialchars($comment['nbdislikec']); ?></small></p>
-                                                <div class="comment-actions">
-                                                    <a href="updatecomment.php?idcommentp=<?= $comment['idcommentp']; ?>" class="edit">Modifier</a>
-                                                    <a href="deletecomment.php?idcommentp=<?= $comment['idcommentp']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this comment?');">Supprimer</a>
-                                                </div>
-                                            </div>
-                                        <?php }
-                                    } else {
-                                        echo "<p>Aucun commentaire.</p>";
-                                    }
-                                    ?>
-
-                                    <!-- Add Comment Form -->
-                                    <form action="addcomment.php" method="POST">
-                                        <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
-                                        <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
-                                        <button type="submit">Ajouter Commentaire</button>
-                                    </form>
                                 </article>
                             <?php } ?>
                         <?php } else { ?>
@@ -246,6 +263,7 @@ $list = $forumpostC->listpost();
                 </section>
             </main>
         </div>
+    </div>
 <style>/* General Styling for Main Content */
 .main-content {
     padding: 20px;
@@ -512,6 +530,41 @@ form button:hover {
 
             
       </script>
+       <script>
+        // Function to handle toggle post details visibility and increment views
+        function togglePostDetails(postId) {
+            const postDetails = document.getElementById('post-details-' + postId);
+            const viewCount = document.getElementById('view-count-' + postId);
+
+            // Toggle visibility of the post details
+            if (postDetails.style.display === "none") {
+                postDetails.style.display = "block";
+
+                // Increment the view count (you can also call the backend to update the view count in the database)
+                fetch('incrementview.php?idpost=' + postId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            viewCount.innerText = data.newViewCount;
+                        }
+                    });
+            } else {
+                postDetails.style.display = "none";
+            }
+        }
+
+        // Function to handle toggle comments visibility
+        function toggleComments(postId) {
+            const comments = document.getElementById('comments-' + postId);
+
+            // Toggle visibility of comments
+            if (comments.style.display === "none") {
+                comments.style.display = "block";
+            } else {
+                comments.style.display = "none";
+            }
+        }
+    </script>
       
    </body>
 </html>

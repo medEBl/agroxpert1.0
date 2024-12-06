@@ -8,8 +8,7 @@ class ForumComment
     private $updateDateC; // last update date of the comment
     private $AuthoridC; // foreign key to id user, supposed to be 1
     private $authorname; // author's name
-    private $nblikec; // number of likes on the comment
-    private $nbdislikec; // number of dislikes on the comment
+    private $emoji;
     private $idpostc; // foreign key to forumpost, references the post that the comment is associated with
 
     // Setter for idcommentp
@@ -84,29 +83,7 @@ class ForumComment
         return $this->authorname;
     }
 
-    // Setter for nblikec
-    public function setNblikec($nblikec)
-    {
-        $this->nblikec = $nblikec;
-    }
-
-    // Getter for nblikec
-    public function getNblikec()
-    {
-        return $this->nblikec;
-    }
-
-    // Setter for nbdislikec
-    public function setNbdislikec($nbdislikec)
-    {
-        $this->nbdislikec = $nbdislikec;
-    }
-
-    // Getter for nbdislikec
-    public function getNbdislikec()
-    {
-        return $this->nbdislikec;
-    }
+   
 
     // Setter for idpostc
     public function setIdpostc($idpostc)
@@ -118,6 +95,16 @@ class ForumComment
     public function getIdpostc()
     {
         return $this->idpostc;
+    }
+    public function setEmoji($emoji)
+    {
+        $this->emoji = $emoji;
+    }
+
+    // Getter for emoji
+    public function getEmoji()
+    {
+        return $this->emoji;
     }
 }
 ?>
