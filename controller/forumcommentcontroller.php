@@ -121,50 +121,36 @@ class ForumCommentController
             return false;
         }
     }
-    public function updateEmoji($idcommentp, $emoji)
-{
-    $sql = "UPDATE forumcomment SET emoji = :emoji WHERE idcommentp = :idcommentp";
+    
+    // Update emoji reaction
+public function addReaction($idcommentp, $emoji) {
     $db = config::getConnexion();
-
+    
+    // Check if the emoji is already set for the comment
+    $sqlCheck = "SELECT emoji, emoji_count FROM forumcomment WHERE idcommentp = :idcommentp";
     try {
-        $query = $db->prepare($sql);
-        $query->bindValue(':emoji', $emoji);
-        $query->bindValue(':idcommentp', $idcommentp, PDO::PARAM_INT);
-        $query->execute();
-        echo "Emoji updated successfully!";
-    } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
-    }
-}
-public function getEmoji($idcommentp)
-{
-    $sql = "SELECT emoji FROM forumcomment WHERE idcommentp = :idcommentp";
-    $db = config::getConnexion();
-
-    try {
-        $stmt = $db->prepare($sql);
+        $stmt = $db->prepare($sqlCheck);
         $stmt->execute(['idcommentp' => $idcommentp]);
-        $emoji = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $emoji ? $emoji['emoji'] : null;
-    } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
-    }
-}
-public function incrementEmojiCount($idcommentp)
-{
-    $sql = "UPDATE forumcomment SET emoji = emoji + 1 WHERE idcommentp = :idcommentp";
-    $db = config::getConnexion();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    try {
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':idcommentp', $idcommentp, PDO::PARAM_INT);
-        $stmt->execute();
-        return true; // You can return a success value or handle as needed
+        if ($result) {
+            // If the emoji exists, update the count
+            if ($result['emoji'] === $emoji) {
+                // Increment the count if the same emoji is selected
+                $sqlUpdate = "UPDATE forumcomment SET emoji_count = emoji_count + 1 WHERE idcommentp = :idcommentp";
+            } else {
+                // If a different emoji is selected, set the new emoji and reset the count to 1
+                $sqlUpdate = "UPDATE forumcomment SET emoji = :emoji, emoji_count = 1 WHERE idcommentp = :idcommentp";
+            }
+            $stmt = $db->prepare($sqlUpdate);
+            $stmt->execute(['idcommentp' => $idcommentp, 'emoji' => $emoji]);
+        }
+
     } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
-        return false; // Handle error if needed
+        echo "Error: " . $e->getMessage();
     }
 }
+
 
 
 
