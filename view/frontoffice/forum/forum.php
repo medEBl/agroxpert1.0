@@ -242,13 +242,13 @@ $list = $forumpostC->listpost();
                                     <!-- Like Button -->
                                     <form action="likepost.php" method="POST" style="display: inline;">
                                         <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
-                                        <button type="submit">Up_vote</button>
+                                        <button type="submit">Like</button>
                                     </form>
 
                                     <!-- Dislike Button -->
                                     <form action="dislikepost.php" method="POST" style="display: inline;">
                                         <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
-                                        <button type="submit">Down_vote</button>
+                                        <button type="submit">Dislike</button>
                                     </form>
 <br><br>
                                     <!-- Button to toggle comments visibility -->
@@ -268,7 +268,7 @@ $list = $forumpostC->listpost();
                                                     <?php endif; ?>
                                                     <div class="comment-reactions">
     
-                                                    <?php
+    <?php
     // List of all possible emojis and their default count (0)
     $reaction_types = [
         'heart' => '❤️',
@@ -317,8 +317,9 @@ $list = $forumpostC->listpost();
 
 </style>
                                                         
-<form action="reactcomment.php" method="POST" id="reaction-form-<?= $comment['idcommentp']; ?>">
+<form action="reactcomment.php" method="POST" id="reaction-form">
     <input type="hidden" name="idcommentp" value="<?= $comment['idcommentp']; ?>">
+    <label for="emoji">React:</label>
     <div class="emoji-container">
         <span class="emoji" data-emoji="heart">❤️</span>
         <span class="emoji" data-emoji="thumbs_up">👍</span>
@@ -327,34 +328,25 @@ $list = $forumpostC->listpost();
     </div>
 </form>
 
-
 <script>
-   // Attach event listeners for all emojis in the current comment
-document.querySelectorAll('[id^="reaction-form-"]').forEach(function(form) {
-    form.querySelectorAll('.emoji').forEach(function(emojiElement) {
+    // When an emoji is clicked, the form will submit with the selected emoji
+    document.querySelectorAll('.emoji').forEach(function(emojiElement) {
         emojiElement.addEventListener('click', function() {
-            // Get the emoji value
+            // Get the emoji value from the data-emoji attribute
             var emoji = emojiElement.getAttribute('data-emoji');
-
-            // Check if the hidden emoji input exists in the form
-            let emojiInput = form.querySelector('input[name="emoji"]');
-            if (!emojiInput) {
-                // If not, create a new hidden input
-                emojiInput = document.createElement('input');
-                emojiInput.type = 'hidden';
-                emojiInput.name = 'emoji';
-                form.appendChild(emojiInput);
-            }
-
-            // Set the emoji value
-            emojiInput.value = emoji;
-
+            
+            // Set the emoji value to the hidden input field
+            var form = document.getElementById('reaction-form');
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'emoji';
+            input.value = emoji;
+            form.appendChild(input);
+            
             // Submit the form
             form.submit();
         });
     });
-});
-
 </script>
 
 
@@ -888,6 +880,6 @@ form button:hover {
             }
         }
     </script>
-      <script src="script.js"></script>
+      
    </body>
 </html>
