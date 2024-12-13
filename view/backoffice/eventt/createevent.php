@@ -1,5 +1,4 @@
 <?php
-
 require_once(__DIR__ . '/../../../controller/ForumeventController.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -7,14 +6,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $description = $_POST['description'];
 
+    // Handle file upload
+    $targetDir = __DIR__ . '/uploads/';
+    $imagePath = null;
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        $imageName = basename($_FILES['image']['name']);
+        $targetFilePath = $targetDir . $imageName;
+
+        // Create uploads directory if not exists
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        // Move uploaded file to target directory
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFilePath)) {
+            $imagePath = 'uploads/' . $imageName; // Relative path to save in DB
+        } else {
+            echo "Error uploading the image.";
+            exit;
+        }
+    }
+
     // Create new Event object
-    $event = new Event(null, $name, $description);
+    $event = new Event(null, $name, $description, $imagePath);
 
     // Create controller instance and add the event
     $controller = new ForumeventController();
     $controller->addevent($event);
-}
 
+    // Redirect to event list
+    header('Location: listevent.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         input[type="text"],
-        textarea {
+        textarea,
+        input[type="file"] {
             padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
@@ -106,19 +131,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         a:hover {
             color: #0056b3;
         }
-
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Create Event</h1>
 
-        <form action="createevent.php" method="POST">
+        <form action="createevent.php" method="POST" enctype="multipart/form-data">
             <label for="name">Event Name:</label>
             <input type="text" name="name" id="name" required><br>
 
             <label for="description">Description:</label>
             <textarea name="description" id="description" required></textarea><br>
+
+            <label for="image">Event Image:</label>
+            <input type="file" name="image" id="image" accept="image/*" required><br>
 
             <button type="submit">Create Event</button>
         </form>

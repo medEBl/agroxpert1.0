@@ -22,17 +22,14 @@ class ForumeventController
     {
         $sql = "DELETE FROM event WHERE id = :id";
         $db = config::getConnexion();
-    
         try {
             $req = $db->prepare($sql);
             $req->bindValue(':id', $id, PDO::PARAM_INT); // Ensure it's an integer
             $req->execute();
-    
-            // Debug: Check if rows are affected
             if ($req->rowCount() > 0) {
-                echo "Event with ID $id deleted successfully."; // Debugging
+                echo "Event with ID $id deleted successfully.";
             } else {
-                echo "No event found with ID $id."; // Debugging
+                echo "No event found with ID $id.";
             }
         } catch (Exception $e) {
             die('Error: ' . $e->getMessage());
@@ -42,27 +39,16 @@ class ForumeventController
     // Add a new event to the database
     public function addevent($event)
     {
-        $sql = "INSERT INTO event (name, description) 
-                VALUES (:name, :description)";
-        
+        $sql = "INSERT INTO event (name, description, image) VALUES (:name, :description, :image)";
         $db = config::getConnexion();
-        
         try {
-            // Prepare the statement
             $query = $db->prepare($sql);
-            
-            // Bind values from the event object
             $query->bindValue(':name', $event->getName());
             $query->bindValue(':description', $event->getDescription());
-            
-            // Execute the query
+            $query->bindValue(':image', $event->getImage()); // Bind the image
             $query->execute();
-    
-            // Debugging: Message if event is added successfully
             echo "Event added successfully!";
-            
         } catch (PDOException $e) {
-            // Catch any errors and display them
             echo 'Error: ' . $e->getMessage();
         }
     }
@@ -72,18 +58,19 @@ class ForumeventController
     {
         $sql = "UPDATE event SET 
                 name = :name,
-                description = :description
+                description = :description,
+                image = :image
                 WHERE id = :id";
-
         $db = config::getConnexion();
-        
         try {
             $query = $db->prepare($sql);
             $query->execute([
                 'id' => $id,
                 'name' => $event->getName(),
-                'description' => $event->getDescription()
+                'description' => $event->getDescription(),
+                'image' => $event->getImage() // Bind the image
             ]);
+            echo "Event updated successfully!";
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
@@ -94,12 +81,9 @@ class ForumeventController
     {
         $sql = "SELECT * FROM event WHERE id = :id";
         $db = config::getConnexion();
-    
         try {
             $stmt = $db->prepare($sql);
             $stmt->execute(['id' => $id]);
-            
-            // Fetch the event
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$event) {
                 echo "No event found with ID: " . $id;

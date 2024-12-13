@@ -1,5 +1,13 @@
 <?php
+
+require 'C:/xampp/htdocs/agroxpert1.0/vendor/autoload.php';
+
+
+
 require_once(__DIR__ . '/../../../controller/ParticipantController.php');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,13 +25,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Add the participant
     $participantController->addParticipant($participant);
 
-    // Redirect to the list page or display success message
-    echo "Participant added successfully!";
-    // Optionally redirect
-    // header("Location: listParticipants.php");
-}
+    // Send email notification using PHPMailer
+    $mail = new PHPMailer(true);
 
+    try {
+        $mail->isSMTP();  
+        $mail->Host = 'smtp.gmail.com';  
+        $mail->SMTPAuth = true;  
+        $mail->Username = 'khaldiselim2@gmail.com'; // Your Gmail email address  
+        $mail->Password = 'bedt tmgm hedk zxjt'; // Use the app password generated above
+        $mail->SMTPSecure = 'ssl'; // Use SSL encryption
+        $mail->Port = 465; // SSL port
+        
+        // Recipients
+        $mail->setFrom('selimkhaldi926@yahoo.com', 'Event Team');
+        $mail->addAddress($email, $name); // Recipient's email and name
+    
+        // Content
+        $mail->isHTML(false); // Send as plain text
+        $mail->Subject = 'Event Registration Confirmation';
+        $mail->Body = "Dear $name,\n\nThank you for registering for the event with ID $event_id.\n\nBest regards,\nEvent Team";
+    
+        $mail->send();
+        echo "Participant added and email sent successfully!";
+    } catch (Exception $e) {
+        echo "Participant added, but email could not be sent. Error: {$mail->ErrorInfo}";
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
