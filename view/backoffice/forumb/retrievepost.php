@@ -78,11 +78,11 @@ $list = $forumpostC->listpost();
 
                                         <form action="likepost.php" method="POST" style="display: inline;">
                                             <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
-                                            <button type="submit">Like</button>
+                                            <button type="submit">Up_vote</button>
                                         </form>
                                         <form action="dislikepost.php" method="POST" style="display: inline;">
                                             <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
-                                            <button type="submit">Dislike</button>
+                                            <button type="submit">Down_vote</button>
                                         </form>
 
                                         <div class="actions">
@@ -104,21 +104,103 @@ $list = $forumpostC->listpost();
                                                         <?php if (isset($comment['updateDateC'])): ?>
                                                             <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
                                                         <?php endif; ?>
+                                                        <div class="comment-reactions">
+  
+    <?php
+    // List of all possible emojis and their default count (0)
+    $reaction_types = [
+        'heart' => '❤️',
+        'thumbs_up' => '👍',
+        'thumbs_down' => '👎',
+        'laugh' => '😂',
+    ];
 
-                                                        <!-- Reaction Options -->
-                                                        <p>
-                                                            ❤️ <span id="heart-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
-                                                            👍 <span id="thumbs-up-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
-                                                            👎 <span id="thumbs-down-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
-                                                            😂 <span id="laugh-<?= $comment['idcommentp']; ?>"><?= htmlspecialchars($comment['emoji'] ?? 0); ?></span>
-                                                        </p>
+    // Display each emoji with the count of reactions
+    foreach ($reaction_types as $emoji => $icon) {
+        // If the emoji matches the current one, use the emoji_count, otherwise set to 0
+        if ($comment['emoji'] == $emoji) {
+            $count = $comment['emoji_count'];
+        } else {
+            $count = 0;
+        }
+        // Display only the icon and count without text
+        echo "<span class='reaction-icon'>$icon <span class='count'>$count</span></span>";
+    }
+    ?>
+</div>
 
-                                                        <div>
-                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'heart')">❤️</button>
-                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'thumbs_up')">👍</button>
-                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'thumbs_down')">👎</button>
-                                                            <button onclick="reactToComment(<?= $comment['idcommentp']; ?>, 'laugh')">😂</button>
-                                                        </div>
+
+<style>
+    .emoji {
+        cursor: pointer; /* Ensures the cursor is a pointer (clickable) */
+    }
+    .comment-reactions {
+    display: flex;
+    gap: 15px; /* Adds space between each emoji */
+    flex-wrap: wrap; /* Wraps to the next line if there isn't enough space */
+    margin-top: 10px;
+    align-items: center; /* Vertically align the items */
+}
+
+.reaction-icon {
+    font-size: 24px; /* Adjust the size of the emojis */
+    display: flex;
+    align-items: center; /* Vertically align the emoji and count */
+}
+
+.count {
+    margin-left: 5px; /* Adds a small space between the emoji and the count */
+    font-size: 18px; /* Smaller font size for the count */
+}
+
+</style>
+                                                        
+<form action="reactcomment.php" method="POST" id="reaction-form-<?= $comment['idcommentp']; ?>">
+    <input type="hidden" name="idcommentp" value="<?= $comment['idcommentp']; ?>">
+    <div class="emoji-container">
+        <span class="emoji" data-emoji="heart">❤️</span>
+        <span class="emoji" data-emoji="thumbs_up">👍</span>
+        <span class="emoji" data-emoji="thumbs_down">👎</span>
+        <span class="emoji" data-emoji="laugh">😂</span>
+    </div>
+</form>
+
+
+<script>
+   // Attach event listeners for all emojis in the current comment
+document.querySelectorAll('[id^="reaction-form-"]').forEach(function(form) {
+    form.querySelectorAll('.emoji').forEach(function(emojiElement) {
+        emojiElement.addEventListener('click', function() {
+            // Get the emoji value
+            var emoji = emojiElement.getAttribute('data-emoji');
+
+            // Check if the hidden emoji input exists in the form
+            let emojiInput = form.querySelector('input[name="emoji"]');
+            if (!emojiInput) {
+                // If not, create a new hidden input
+                emojiInput = document.createElement('input');
+                emojiInput.type = 'hidden';
+                emojiInput.name = 'emoji';
+                form.appendChild(emojiInput);
+            }
+
+            // Set the emoji value
+            emojiInput.value = emoji;
+
+            // Submit the form
+            form.submit();
+        });
+    });
+});
+
+</script>
+
+
+
+      
+
+
+                                                       
                                                     </div>
                                                 <?php }
                                             } else {
@@ -167,28 +249,11 @@ $list = $forumpostC->listpost();
             const comments = document.getElementById('comments-' + postId);
             comments.style.display = comments.style.display === "none" ? "block" : "none";
         }
+       
 
-        function reactToComment(commentId, reactionType) {
-            fetch('reactcomment.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `idcommentp=${commentId}&reaction=${reactionType}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const emojiSpan = document.getElementById(`${reactionType}-${commentId}`);
-                    emojiSpan.innerText = parseInt(emojiSpan.innerText) + 1;
-                } else {
-                    alert(data.message || 'Failed to react to the comment.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while reacting to the comment.');
-            });
-        }
+
     </script>
+      <script src="script.js"></script>
 </body>
 
 </html>

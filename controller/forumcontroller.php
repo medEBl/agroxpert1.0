@@ -197,7 +197,7 @@ public function incrementDislikes($idpost)
 
 public function listPostsByDislikes()
     {
-        $sql = "SELECT * FROM forumpost ORDER BY nbdislikes DESC";
+        $sql = "SELECT * FROM forumpost ORDER BY nbdislikesp DESC";
         $db = config::getConnexion();
         try {
             $liste = $db->query($sql);
