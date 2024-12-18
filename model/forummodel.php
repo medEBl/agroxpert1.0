@@ -12,6 +12,7 @@ class ForumPost
     private $updateDateP;
     private $nbviewsp;
     private $nblikesp;
+    
     private $Id_UserP;//foreign key to id user suposed to be 1
 
     // Constructor with new attributes

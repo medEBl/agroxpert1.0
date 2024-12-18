@@ -1,10 +1,16 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
+require_once(__DIR__ . '/../../../controller/userc.php');
 
 $error = "";
 $post = null;
 $postController = new ForumpostController();
-$Id_UserP = 1; // Assume user ID for testing
+
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+ // Assume user ID for testing
 
 if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["typeuser"]) && isset($_POST["authorname"]) && isset($_POST["typepost"])) {
     if (!empty($_POST["titrePost"]) && !empty($_POST["contenuPost"]) && !empty($_POST["typeuser"]) && !empty($_POST["authorname"]) && !empty($_POST["typepost"])) {
@@ -43,6 +49,7 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    
     <div class="container">
         <div class="main-content">
             <header>
@@ -55,36 +62,38 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
             <?php endif; ?>
 
             <form id="forumForm" method="POST" action="">
-                <!-- User Type Dropdown -->
-                <label for="typeuser">Type d'utilisateur:</label>
-<select id="typeuser" name="typeuser" required>
-    <option value="">Select User Type</option> <!-- Invalid default -->
-    <option value="Admin">Admin</option>
-    <option value="Member">Member</option>
-</select>
+    <!-- User Type Dropdown -->
+    <label for="typeuser">Type d'utilisateur:</label>
+    <select id="typeuser" name="typeuser" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Admin">Admin</option>
+        <option value="Member">Member</option>
+    </select>
 
-                <label for="authorname">Nom de l'Auteur:</label>
-                <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
+    <label for="authorname">Nom de l'Auteur:</label>
+    <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
 
-                <!-- Post Type Dropdown -->
-                <label for="typepost">Type de Post:</label>
-<select id="typepost" name="typepost" required>
-    <option value="">Select Post Type</option> <!-- Invalid default -->
-    <option value="Discussion">Discussion</option>
-    <option value="Question">Question</option>
-</select>
+    <!-- Post Type Dropdown -->
+    <label for="typepost">Type de Post:</label>
+    <select id="typepost" name="typepost" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Discussion">Discussion</option>
+        <option value="Question">Question</option>
+    </select>
 
-                <label for="titrePost">Titre :</label>
-                <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
+    <label for="titrePost">Titre :</label>
+    <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
 
-                <label for="contenuPost">Contenu :</label>
-                <textarea id="contenuPost" name="contenuPost" rows="5" placeholder="Contenu du post" required></textarea>
+    <label for="contenuPost">Contenu :</label>
+    <textarea id="contenuPost" name="contenuPost" rows="5" placeholder="Contenu du post" required></textarea>
 
-                <button type="submit">Enregistrer</button>
-            </form>
+    <button type="submit">Enregistrer</button>
+    <div id="errorMessages" style="color: red; margin-top: 10px;"></div>
+</form>
+
+
         </div>
     </div>
     <script src="script.js"></script>
-
 </body>
 </html>

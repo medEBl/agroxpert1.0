@@ -1,6 +1,9 @@
 <?php
+session_start();
+
 // Include necessary files
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
+require_once '../../../controller/userc.php';
 
 
 // Instantiate the controller
@@ -17,7 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $createDateC = new DateTime();
     
     // Set the Author ID to 1 (as per your assumption)
-    $AuthoridC = 1;
+    
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];} // Inclus pour la mise à jour des ventes
     
     // Create a new ForumComment object and set the properties
     $comment = new ForumComment();

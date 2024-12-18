@@ -1,10 +1,18 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
+require_once '../../../controller/userc.php';
 
 // Instantiate controllers
 $forumpostC = new ForumpostController();
 $forumcommentC = new ForumCommentController();
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 
 // Get all posts
 $list = $forumpostC->listpost();
@@ -55,12 +63,13 @@ $list = $forumpostC->listpost();
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="index.html">Home</a>
-                    <a class="nav-item nav-link" href="about.html">Market</a>
-                    <a class="nav-item nav-link" href="services.html">Blog</a>
-                    <a class="nav-item nav-link" href="products.html">Meteo</a>
-                    <a class="nav-item nav-link" href="products.html">Forum</a>
-                    <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-item nav-link" href="../home/index.php">Home</a>
+                    <a class="nav-item nav-link" href="../marketplace/shop.php">Market</a>
+                    <a class="nav-item nav-link" href="../front blog/taskfront.php">Blog</a>
+                    <a class="nav-item nav-link" href="../meteo/taskfront.php">Meteo</a>
+                    <a class="nav-item nav-link" href="forum.php">Forum</a>
+                    <a class="nav-item nav-link" href="../event/taskfront.php">Event</a>
+                    <a class="nav-item nav-link" href="../frontreclamation&reponse/create.php">Contact us</a>
                 </div>
             </div>
             <div class="login_menu">
@@ -90,12 +99,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -114,12 +124,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -138,12 +149,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -159,35 +171,71 @@ $list = $forumpostC->listpost();
         </div>
         <!-- banner section end -->
     </div>
-    <!-- header section end -->
+   <div style="background-color:#f8f9fa;" ><s style="color:#f8f9fa;background-color:#f8f9fa;">.</s></div>    <!-- header section end -->
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
   <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
+  
+    
+
+       
     <div class="main-content">
-            
+        <header>
+            <br><br>
+            <h1>Gestion des Forums</h1>
+            <div class="add-post">
+                <form action="addpostf.php" method="GET" style="text-align: right;">
+                    <button type="submit" class="add-comment-btn">Ajouter un Post</button>
+                </form>
+            </div>
 
-                <h1> Gestion des Forums</h1>
-                <div class="add-post">
-        <form action="addpostf.php" method="GET" style="text-align: right;">
-            <button style="text-align:center" type="submit" class="add-comment-btn">Ajouter un Post</button>
-        </form>
-    </div>
-            
+            <div class="search-filters" style="text-align: right;">
+    <input type="text" id="searchBar" placeholder="Search Posts..." oninput="filterPosts()">
+    
+    <!-- Filter by Type User -->
+    <select id="filterByTypeUser" onchange="filterByTypeUser()">
+        <option value="">Filter by Type User</option>
+        <option value="Admin">Admin</option>
+        <option value="Member">Member</option>
+        
+        <!-- Add more options as needed -->
+    </select>
+    
+    <!-- Filter by Type Post -->
+    <select id="filterByTypePost" onchange="filterByTypePost()">
+        <option value="">Filter by Type Post</option>
+       
+        <option value="Question">Question</option>
+        <option value="Discussion">Discussion</option>
+        <!-- Add more options as needed -->
+    </select>
+    
+    <select id="filterByDate" onchange="filterByDate()">
+        <option value="">Filter by Date</option>
+        <option value="mostRecent">Most Recent First</option>
+        <option value="oldestFirst">Oldest First</option>
+    </select>
+</div>
 
-            <main>
-                <h2>Liste des Posts</h2>
-                <section id="postList">
-                    <div class="cards">
-                        <!-- Loop through the posts and display them -->
-                        <?php if ($list) { ?>
-                            <?php foreach ($list as $post) { ?>
-                                <article class="card">
-                                    
-                                        <h3><?= htmlspecialchars($post['titleP']); ?></h3>
-                                        <p><strong>Auteur:</strong> <?= htmlspecialchars($post['authorname']); ?></p>
-                                        <p><strong>Type d'utilisateur:</strong> <?= htmlspecialchars($post['typeuser']); ?></p>
-                                    
+        </header>
 
+        <main>
+            <h2>Liste des Posts</h2>
+            <section id="postList">
+                <div class="cards">
+                    <!-- Loop through the posts and display them -->
+                    <?php if ($list) { ?>
+                        <?php foreach ($list as $post) { ?>
+                            <article class="card" data-title="<?= htmlspecialchars($post['titleP']); ?>" data-typeuser="<?= htmlspecialchars($post['typeuser']); ?>" data-typepost="<?= htmlspecialchars($post['typepost']); ?>" data-createdate="<?= htmlspecialchars($post['createDateP']); ?>">
+                                <header>
+                                    <h3><?= htmlspecialchars($post['titleP']); ?></h3>
+                                    <p><strong>Auteur:</strong> <?= htmlspecialchars($post['authorname']); ?></p>
+                                    <p><strong>Type d'utilisateur:</strong> <?= htmlspecialchars($post['typeuser']); ?></p>
+                                    <p><strong>Type de post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
+                                </header>
+
+                                <button class="view-button" onclick="togglePostDetails(<?= $post['idpost']; ?>)">Voir le Post</button>
+                                <div id="post-details-<?= $post['idpost']; ?>" class="post-details" style="display: none;">
                                     <section>
                                         <p><strong>Type de Post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
                                         <p><?= htmlspecialchars($post['contentP']); ?></p>
@@ -198,55 +246,290 @@ $list = $forumpostC->listpost();
                                         <?php if (isset($post['updateDateP'])): ?>
                                             <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
                                         <?php endif; ?>
+                                        <p><strong>Vues:</strong> <span id="view-count-<?= $post['idpost']; ?>"><?= htmlspecialchars($post['nbviewsp']); ?></span></p>
+                                        <p><strong>Likes:</strong> <?= htmlspecialchars($post['nblikesp']); ?></p>
+                                        <p><strong>Dislikes:</strong> <?= htmlspecialchars($post['nbdislikesp']); ?></p>
                                     </footer>
 
-                                    <!-- Actions Section -->
-                                    <div class="actions">
-                                        <a href="updatepostf.php?idpost=<?= $post['idpost']; ?>" class="edit">Modifier</a>
-                                        <a href="deletepostf.php?idpost=<?= $post['idpost']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Supprimer</a>
-                                    </div>
+                                    <!-- Like Button -->
+                                    <form action="likepost.php" method="POST" style="display: inline;">
+                                        <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                        <button type="submit">Like</button>
+                                    </form>
 
-                                    <!-- Display Comments -->
-                                    <h4>Commentaires:</h4>
-                                    <?php
-                                    $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
-                                    if ($comments) {
-                                        foreach ($comments as $comment) { ?>
-                                            <div class="comment">
-                                                <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
-                                                <p><?= htmlspecialchars($comment['contentC']); ?></p>
-                                                <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
-                                                <?php if (isset($comment['updateDateC'])): ?>
-                                                    <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
-                                                <?php endif; ?>
-                                                <p><small>Likes: <?= htmlspecialchars($comment['nblikec']); ?>, Dislikes: <?= htmlspecialchars($comment['nbdislikec']); ?></small></p>
-                                                <div class="comment-actions">
-                                                    <a href="updatecomment.php?idcommentp=<?= $comment['idcommentp']; ?>" class="edit">Modifier</a>
-                                                    <a href="deletecomment.php?idcommentp=<?= $comment['idcommentp']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this comment?');">Supprimer</a>
+                                    <!-- Dislike Button -->
+                                    <form action="dislikepost.php" method="POST" style="display: inline;">
+                                        <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                        <button type="submit">Dislike</button>
+                                    </form>
+<br><br>
+                                    <!-- Button to toggle comments visibility -->
+                                    <button class="view-comments-button" onclick="toggleComments(<?= $post['idpost']; ?>)">Voir les Commentaires</button>
+
+                                    <div id="comments-<?= $post['idpost']; ?>" class="comments" style="display: none;">
+                                        <?php
+                                        $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
+                                        if ($comments) {
+                                            foreach ($comments as $comment) { ?>
+                                                <div class="comment">
+                                                    <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
+                                                    <p><?= htmlspecialchars($comment['contentC']); ?></p>
+                                                    <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
+                                                    <?php if (isset($comment['updateDateC'])): ?>
+                                                        <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
+                                                    <?php endif; ?>
+                                                    <div class="comment-reactions">
+    
+                                                    <?php
+    // List of all possible emojis and their default count (0)
+    $reaction_types = [
+        'heart' => '❤️',
+        'thumbs_up' => '👍',
+        'thumbs_down' => '👎',
+        'laugh' => '😂',
+    ];
+
+    // Display each emoji with the count of reactions
+    foreach ($reaction_types as $emoji => $icon) {
+        // If the emoji matches the current one, use the emoji_count, otherwise set to 0
+        if ($comment['emoji'] == $emoji) {
+            $count = $comment['emoji_count'];
+        } else {
+            $count = 0;
+        }
+        // Display only the icon and count without text
+        echo "<span class='reaction-icon'>$icon <span class='count'>$count</span></span>";
+    }
+    ?>
+</div>
+
+
+<style>
+    .emoji {
+        cursor: pointer; /* Ensures the cursor is a pointer (clickable) */
+    }
+    .comment-reactions {
+    display: flex;
+    gap: 15px; /* Adds space between each emoji */
+    flex-wrap: wrap; /* Wraps to the next line if there isn't enough space */
+    margin-top: 10px;
+    align-items: center; /* Vertically align the items */
+}
+
+.reaction-icon {
+    font-size: 24px; /* Adjust the size of the emojis */
+    display: flex;
+    align-items: center; /* Vertically align the emoji and count */
+}
+
+.count {
+    margin-left: 5px; /* Adds a small space between the emoji and the count */
+    font-size: 18px; /* Smaller font size for the count */
+}
+
+</style>
+                                                        
+<form action="reactcomment.php" method="POST" id="reaction-form-<?= $comment['idcommentp']; ?>">
+    <input type="hidden" name="idcommentp" value="<?= $comment['idcommentp']; ?>">
+    <div class="emoji-container">
+        <span class="emoji" data-emoji="heart">❤️</span>
+        <span class="emoji" data-emoji="thumbs_up">👍</span>
+        <span class="emoji" data-emoji="thumbs_down">👎</span>
+        <span class="emoji" data-emoji="laugh">😂</span>
+    </div>
+</form>
+
+
+<script>
+   // Attach event listeners for all emojis in the current comment
+document.querySelectorAll('[id^="reaction-form-"]').forEach(function(form) {
+    form.querySelectorAll('.emoji').forEach(function(emojiElement) {
+        emojiElement.addEventListener('click', function() {
+            // Get the emoji value
+            var emoji = emojiElement.getAttribute('data-emoji');
+
+            // Check if the hidden emoji input exists in the form
+            let emojiInput = form.querySelector('input[name="emoji"]');
+            if (!emojiInput) {
+                // If not, create a new hidden input
+                emojiInput = document.createElement('input');
+                emojiInput.type = 'hidden';
+                emojiInput.name = 'emoji';
+                form.appendChild(emojiInput);
+            }
+
+            // Set the emoji value
+            emojiInput.value = emoji;
+
+            // Submit the form
+            form.submit();
+        });
+    });
+});
+
+</script>
+
+
+
                                                 </div>
-                                            </div>
-                                        <?php }
-                                    } else {
-                                        echo "<p>Aucun commentaire.</p>";
-                                    }
-                                    ?>
+                                            <?php }
+                                        } else {
+                                            echo "<p>Aucun commentaire.</p>";
+                                        }
+                                        ?>
+                                    </div>
 
                                     <!-- Add Comment Form -->
                                     <form action="addcomment.php" method="POST">
-    <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
-    <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
-    <button type="submit">Ajouter Commentaire</button>
-</form>
-
-                                </article>
-                            <?php } ?>
-                        <?php } else { ?>
-                            <p>Aucun post n'a été trouvé.</p>
+                                        <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
+                                        <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
+                                        <button type="submit">Ajouter Commentaire</button>
+                                    </form>
+                                </div>
+                            </article>
                         <?php } ?>
-                    </div>
-                </section>
-            </main>
-        </div>
+                    <?php } else { ?>
+                        <p>Aucun post n'a été trouvé.</p>
+                    <?php } ?>
+                </div>
+            </section>
+        </main>
+
+        <!-- Alphabet Filter -->
+        <footer>
+            <div class="alphabet">
+                <a href="javascript:void(0);" onclick="filterByLetter('A')">A</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('B')">B</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('C')">C</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('D')">D</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('E')">E</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('F')">F</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('G')">G</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('H')">H</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('I')">I</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('J')">J</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('K')">K</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('L')">L</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('M')">M</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('N')">N</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('O')">O</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('P')">P</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('Q')">Q</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('R')">R</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('S')">S</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('T')">T</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('U')">U</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('V')">V</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('W')">W</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('X')">X</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('Y')">Y</a>
+                <a href="javascript:void(0);" onclick="filterByLetter('Z')">Z</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Function to filter posts based on search input
+        function filterPosts() {
+            let searchQuery = document.getElementById("searchBar").value.toLowerCase();
+            let posts = document.querySelectorAll(".card");
+            
+            posts.forEach(post => {
+                let title = post.querySelector("h3").textContent.toLowerCase();
+                let typeUser = post.getAttribute("data-typeuser").toLowerCase();
+                let typePost = post.getAttribute("data-typepost").toLowerCase();
+                let createDate = post.getAttribute("data-createdate").toLowerCase();
+
+                if (title.includes(searchQuery) || typeUser.includes(searchQuery) || typePost.includes(searchQuery) || createDate.includes(searchQuery)) {
+                    post.style.display = "block"; // Show post
+                } else {
+                    post.style.display = "none"; // Hide post
+                }
+            });
+        }
+
+        // Function to filter posts by the first letter of the title
+        function filterByLetter(letter) {
+            let posts = document.querySelectorAll(".card");
+            
+            posts.forEach(post => {
+                let title = post.querySelector("h3").textContent.trim();
+                let firstLetter = title.charAt(0).toUpperCase();
+                
+                if (firstLetter === letter) {
+                    post.style.display = "block"; // Show post
+                } else {
+                    post.style.display = "none"; // Hide post
+                }
+            });
+        }
+
+       // Function to filter posts by typeUser (using select dropdown)
+function filterByTypeUser() {
+    let typeUser = document.getElementById("filterByTypeUser").value.toLowerCase();
+    let posts = document.querySelectorAll(".card");
+    
+    posts.forEach(post => {
+        let postTypeUser = post.getAttribute("data-typeuser").toLowerCase();
+        
+        if (typeUser === "" || postTypeUser.includes(typeUser)) {
+            post.style.display = "block"; // Show post
+        } else {
+            post.style.display = "none"; // Hide post
+        }
+    });
+}
+
+// Function to filter posts by typePost (using select dropdown)
+function filterByTypePost() {
+    let typePost = document.getElementById("filterByTypePost").value.toLowerCase();
+    let posts = document.querySelectorAll(".card");
+    
+    posts.forEach(post => {
+        let postTypePost = post.getAttribute("data-typepost").toLowerCase();
+        
+        if (typePost === "" || postTypePost.includes(typePost)) {
+            post.style.display = "block"; // Show post
+        } else {
+            post.style.display = "none"; // Hide post
+        }
+    });
+}
+
+
+        // Function to filter posts by date (Most recent first)
+       // Function to filter posts by date (Most recent first or Oldest first)
+// Function to filter posts by date (Most recent first or Oldest first)
+function filterByDate() {
+    let posts = Array.from(document.querySelectorAll(".card"));
+    
+    // Get the selected value from the dropdown
+    let selectedOption = document.getElementById("filterByDate").value;
+    
+    // Sort posts based on the date
+    if (selectedOption === "mostRecent") {
+        posts.sort((a, b) => {
+            let dateA = new Date(a.getAttribute("data-createdate"));
+            let dateB = new Date(b.getAttribute("data-createdate"));
+            return dateB - dateA; // Sort descending (most recent first)
+        });
+    } else if (selectedOption === "oldestFirst") {
+        posts.sort((a, b) => {
+            let dateA = new Date(a.getAttribute("data-createdate"));
+            let dateB = new Date(b.getAttribute("data-createdate"));
+            return dateA - dateB; // Sort ascending (oldest first)
+        });
+    }
+
+    // Append sorted posts back to the DOM
+    let postList = document.getElementById("postList");
+    posts.forEach(post => {
+        postList.appendChild(post); // Reorder the posts
+    });
+}
+
+
+    </script>
 <style>/* General Styling for Main Content */
 .main-content {
     padding: 20px;
@@ -426,6 +709,76 @@ form button {
 form button:hover {
     background-color: #218838;
 }
+/* Search and Filters Section */
+.search-filters {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Search Bar Styling */
+.search-filters input[type="text"] {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: 250px;
+    max-width: 100%;
+}
+
+.search-filters input[type="text"]:focus {
+    border-color: #007bff;
+}
+
+/* Sort and Filter Buttons */
+.search-filters select, .search-filters button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.search-filters select:focus, .search-filters button:focus {
+    border-color: #007bff;
+}
+
+/* Hover effect for the buttons */
+.search-filters button:hover, .search-filters select:hover {
+    background-color: #f1f1f1;
+}
+
+/* Alphabetical Filter Section */
+.alphabet-filter {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Alphabet Buttons */
+.alphabet-filter a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.alphabet-filter a:hover {
+    background-color: #007bff;
+    color: white;
+}
 </style>
 
     
@@ -445,11 +798,12 @@ form button:hover {
                     <h2 class="useful_text">Services</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">MarketPlace</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Weather Alerts</a></li>
-                            <li class="active"><a href="#">Forum</a></li>
-                            <li><a href="#">And more</a></li>
+                        <li><a href="../marketplace/shop.php">MarketPlace</a></li>
+                            <li><a href="../front blog/taskfront.php">Blogs</a></li>
+                            <li><a href="../meteo/taskfront.php">Weather Alerts</a></li>
+                            <li class="active"><a href="forum.php">Forum</a></li>
+                            <li ><a href="../event/taskfront.php">Event</a></li>
+                            <li><a href="../frontreclamation&reponse/create.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -457,11 +811,11 @@ form button:hover {
                     <h2 class="useful_text">Our Products</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">Seasonal Produce</a></li>
-                            <li><a href="#">Organic Foods</a></li>
-                            <li><a href="#">Gardening Supplies</a></li>
-                            <li><a href="#">Meal Kits</a></li>
-                            <li><a href="#">And more</a></li>
+                            <li><a href="../marketplace/shop.php">Seasonal Produce</a></li>
+                            <li><a href="../marketplace/shop.php">Organic Foods</a></li>
+                            <li><a href="../marketplace/shop.php">Gardening Supplies</a></li>
+                            <li><a href="../marketplace/shop.php">Meal Kits</a></li>
+                            <li><a href="../marketplace/shop.php">And more</a></li>
                         </ul>
                     </div>
                 </div>
@@ -513,7 +867,41 @@ form button:hover {
 
             
       </script>
+       <script>
+        // Function to handle toggle post details visibility and increment views
+        function togglePostDetails(postId) {
+            const postDetails = document.getElementById('post-details-' + postId);
+            const viewCount = document.getElementById('view-count-' + postId);
+
+            // Toggle visibility of the post details
+            if (postDetails.style.display === "none") {
+                postDetails.style.display = "block";
+
+                // Increment the view count (you can also call the backend to update the view count in the database)
+                fetch('incrementview.php?idpost=' + postId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            viewCount.innerText = data.newViewCount;
+                        }
+                    });
+            } else {
+                postDetails.style.display = "none";
+            }
+        }
+
+        // Function to handle toggle comments visibility
+        function toggleComments(postId) {
+            const comments = document.getElementById('comments-' + postId);
+
+            // Toggle visibility of comments
+            if (comments.style.display === "none") {
+                comments.style.display = "block";
+            } else {
+                comments.style.display = "none";
+            }
+        }
+    </script>
       
-      <script src="comment.js"></script>
    </body>
 </html>

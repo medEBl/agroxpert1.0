@@ -1,10 +1,14 @@
 <?php
+session_start();
 // Include necessary files
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
-
+require_once '../../../controller/userc.php';
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];} 
 // Check if we have a comment ID and fetch it for editing
 if (isset($_GET['idcommentp'])) {
     $idcommentp = $_GET['idcommentp'];
+    
 
     // Instantiate the controller
     $forumCommentController = new ForumCommentController();
@@ -69,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST">
                 <div>
                     <p><strong>Commentaire par:</strong> <?= htmlspecialchars($comment['authorname']) ?></p>
-                    <p><strong>Nombre de Likes:</strong> <?= htmlspecialchars($comment['nblikec']) ?></p>
-                    <p><strong>Nombre de Dislikes:</strong> <?= htmlspecialchars($comment['nbdislikec']) ?></p>
+                    
                 </div>
 
                 <div>
@@ -81,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+    
 </body>
 
 </html>

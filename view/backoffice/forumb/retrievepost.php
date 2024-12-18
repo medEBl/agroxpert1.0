@@ -1,11 +1,17 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
-
+require_once(__DIR__ . '/../../../controller/userc.php');
 // Instantiate controllers
 $forumpostC = new ForumpostController();
 $forumcommentC = new ForumCommentController();
-
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 // Get all posts
 $list = $forumpostC->listpost();
 ?>
@@ -28,8 +34,13 @@ $list = $forumpostC->listpost();
             <h2>DASHBOARD</h2>
             <nav>
                 <ul>
-                    <li><a href="#">Gestion de Forum</a></li>
-                    <!-- Add other sidebar items here -->
+                <li><a href="../user/gestion.php">Gestion de Compte</a></li>
+                    <li><a href="../marketplace/productList.php">Gestion de Market</a></li>
+                    <li><a href="../mimi/bloglist.php">Gestion de Blog</a></li>
+                    <li><a href="../back office/listesmeteo.php">Gestion de Météo</a></li>
+                    <li><a href="retrievepost.php">Gestion de Forum</a></li>
+                    <li><a href="../backreclamation&reponse/admin.php">Gestion de Feedback</a></li>
+                    <li><a href="../eventt/listevent.php">Gestion d'event</a></li>
                 </ul>
             </nav>
         </aside>
@@ -39,10 +50,10 @@ $list = $forumpostC->listpost();
             <header>
                 <h1>BackOffice - Gestion des Forums</h1>
                 <div class="add-post">
-        <form action="addpost.php" method="GET" style="text-align: right;">
-            <button type="submit" class="add-comment-btn">Ajouter un Post</button>
-        </form>
-    </div>
+                    <form action="addpost.php" method="GET" style="text-align: right;">
+                        <button type="submit" class="add-comment-btn">Ajouter un Post</button>
+                    </form>
+                </div>
             </header>
 
             <main>
@@ -59,55 +70,162 @@ $list = $forumpostC->listpost();
                                         <p><strong>Type d'utilisateur:</strong> <?= htmlspecialchars($post['typeuser']); ?></p>
                                     </header>
 
-                                    <section>
-                                        <p><strong>Type de Post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
-                                        <p><?= htmlspecialchars($post['contentP']); ?></p>
-                                    </section>
+                                    <button class="view-button" onclick="togglePostDetails(<?= $post['idpost']; ?>)">Voir le Post</button>
+                                    <div id="post-details-<?= $post['idpost']; ?>" class="post-details" style="display: none;">
+                                        <section>
+                                            <p><strong>Type de Post:</strong> <?= htmlspecialchars($post['typepost']); ?></p>
+                                            <p><?= htmlspecialchars($post['contentP']); ?></p>
+                                        </section>
 
-                                    <footer>
-                                        <p><strong>Date de création:</strong> <?= htmlspecialchars($post['createDateP']); ?></p>
-                                        <?php if (isset($post['updateDateP'])): ?>
-                                            <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
-                                        <?php endif; ?>
-                                    </footer>
+                                        <footer>
+                                            <p><strong>Date de création:</strong> <?= htmlspecialchars($post['createDateP']); ?></p>
+                                            <?php if (isset($post['updateDateP'])): ?>
+                                                <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($post['updateDateP']); ?></p>
+                                            <?php endif; ?>
+                                            <p><strong>Vues:</strong> <span id="view-count-<?= $post['idpost']; ?>"><?= htmlspecialchars($post['nbviewsp']); ?></span></p>
+                                            <p><strong>Likes:</strong> <?= htmlspecialchars($post['nblikesp']); ?></p>
+                                            <p><strong>Dislikes:</strong> <?= htmlspecialchars($post['nbdislikesp']); ?></p>
+                                        </footer>
 
-                                    <!-- Actions Section -->
-                                    <div class="actions">
-                                        <a href="updatepost.php?idpost=<?= $post['idpost']; ?>" class="edit">Modifier</a>
-                                        <a href="deletepost.php?idpost=<?= $post['idpost']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Supprimer</a>
+                                        <form action="likepost.php" method="POST" style="display: inline;">
+                                            <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                            <button type="submit">Up_vote</button>
+                                        </form>
+                                        <form action="dislikepost.php" method="POST" style="display: inline;">
+                                            <input type="hidden" name="idpost" value="<?= $post['idpost']; ?>">
+                                            <button type="submit">Down_vote</button>
+                                        </form>
+
+                                        <div class="actions">
+                                            <a href="updatepost.php?idpost=<?= $post['idpost']; ?>" class="edit">Modifier</a>
+                                            <a href="deletepost.php?idpost=<?= $post['idpost']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Supprimer</a>
+                                        </div>
+
+                                        <button class="view-comments-button" onclick="toggleComments(<?= $post['idpost']; ?>)">Voir les Commentaires</button>
+
+                                        <div id="comments-<?= $post['idpost']; ?>" class="comments" style="display: none;">
+                                            <?php
+                                            $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
+                                            if ($comments) {
+                                                foreach ($comments as $comment) { ?>
+                                                    <div class="comment">
+                                                        <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
+                                                        <p><?= htmlspecialchars($comment['contentC']); ?></p>
+                                                        <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
+                                                        <?php if (isset($comment['updateDateC'])): ?>
+                                                            <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
+                                                        <?php endif; ?>
+                                                        <div class="comment-reactions">
+  
+    <?php
+    // List of all possible emojis and their default count (0)
+    $reaction_types = [
+        'heart' => '❤️',
+        'thumbs_up' => '👍',
+        'thumbs_down' => '👎',
+        'laugh' => '😂',
+    ];
+
+    // Display each emoji with the count of reactions
+    foreach ($reaction_types as $emoji => $icon) {
+        // If the emoji matches the current one, use the emoji_count, otherwise set to 0
+        if ($comment['emoji'] == $emoji) {
+            $count = $comment['emoji_count'];
+        } else {
+            $count = 0;
+        }
+        // Display only the icon and count without text
+        echo "<span class='reaction-icon'>$icon <span class='count'>$count</span></span>";
+    }
+    ?>
+</div>
+
+
+<style>
+    .emoji {
+        cursor: pointer; /* Ensures the cursor is a pointer (clickable) */
+    }
+    .comment-reactions {
+    display: flex;
+    gap: 15px; /* Adds space between each emoji */
+    flex-wrap: wrap; /* Wraps to the next line if there isn't enough space */
+    margin-top: 10px;
+    align-items: center; /* Vertically align the items */
+}
+
+.reaction-icon {
+    font-size: 24px; /* Adjust the size of the emojis */
+    display: flex;
+    align-items: center; /* Vertically align the emoji and count */
+}
+
+.count {
+    margin-left: 5px; /* Adds a small space between the emoji and the count */
+    font-size: 18px; /* Smaller font size for the count */
+}
+
+</style>
+                                                        
+<form action="reactcomment.php" method="POST" id="reaction-form-<?= $comment['idcommentp']; ?>">
+    <input type="hidden" name="idcommentp" value="<?= $comment['idcommentp']; ?>">
+    <div class="emoji-container">
+        <span class="emoji" data-emoji="heart">❤️</span>
+        <span class="emoji" data-emoji="thumbs_up">👍</span>
+        <span class="emoji" data-emoji="thumbs_down">👎</span>
+        <span class="emoji" data-emoji="laugh">😂</span>
+    </div>
+</form>
+
+
+<script>
+   // Attach event listeners for all emojis in the current comment
+document.querySelectorAll('[id^="reaction-form-"]').forEach(function(form) {
+    form.querySelectorAll('.emoji').forEach(function(emojiElement) {
+        emojiElement.addEventListener('click', function() {
+            // Get the emoji value
+            var emoji = emojiElement.getAttribute('data-emoji');
+
+            // Check if the hidden emoji input exists in the form
+            let emojiInput = form.querySelector('input[name="emoji"]');
+            if (!emojiInput) {
+                // If not, create a new hidden input
+                emojiInput = document.createElement('input');
+                emojiInput.type = 'hidden';
+                emojiInput.name = 'emoji';
+                form.appendChild(emojiInput);
+            }
+
+            // Set the emoji value
+            emojiInput.value = emoji;
+
+            // Submit the form
+            form.submit();
+        });
+    });
+});
+
+</script>
+
+
+
+      
+
+
+                                                       
+                                                    </div>
+                                                <?php }
+                                            } else {
+                                                echo "<p>Aucun commentaire.</p>";
+                                            }
+                                            ?>
+                                        </div>
+
+                                        <form action="addcommentf.php" method="POST">
+                                            <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
+                                            <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
+                                            <button type="submit">Ajouter Commentaire</button>
+                                        </form>
                                     </div>
-
-                                    <!-- Display Comments -->
-                                    <h4>Commentaires:</h4>
-                                    <?php
-                                    $comments = $forumcommentC->getCommentsByPostId($post['idpost']);
-                                    if ($comments) {
-                                        foreach ($comments as $comment) { ?>
-                                            <div class="comment">
-                                                <p><strong>Commentaire par <?= htmlspecialchars($comment['authorname']); ?>:</strong></p>
-                                                <p><?= htmlspecialchars($comment['contentC']); ?></p>
-                                                <p><small>Publié le: <?= htmlspecialchars($comment['createDateC']); ?></small></p>
-                                                <?php if (isset($comment['updateDateC'])): ?>
-                                                    <p><small>Mis à jour le: <?= htmlspecialchars($comment['updateDateC']); ?></small></p>
-                                                <?php endif; ?>
-                                                <p><small>Likes: <?= htmlspecialchars($comment['nblikec']); ?>, Dislikes: <?= htmlspecialchars($comment['nbdislikec']); ?></small></p>
-                                                <div class="comment-actions">
-                                                    <a href="updatecommentf.php?idcommentp=<?= $comment['idcommentp']; ?>" class="edit">Modifier</a>
-                                                    <a href="deletecommentf.php?idcommentp=<?= $comment['idcommentp']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this comment?');">Supprimer</a>
-                                                </div>
-                                            </div>
-                                        <?php }
-                                    } else {
-                                        echo "<p>Aucun commentaire.</p>";
-                                    }
-                                    ?>
-
-                                    <!-- Add Comment Form -->
-                                    <form action="addcommentf.php" method="POST">
-                                        <input type="hidden" name="idpostc" value="<?= $post['idpost']; ?>">
-                                        <textarea name="contentC" rows="4" required placeholder="Ajoutez un commentaire..."></textarea><br>
-                                        <button type="submit">Ajouter Commentaire</button>
-                                    </form>
                                 </article>
                             <?php } ?>
                         <?php } else { ?>
@@ -118,6 +236,35 @@ $list = $forumpostC->listpost();
             </main>
         </div>
     </div>
+
+    <script>
+        function togglePostDetails(postId) {
+            const postDetails = document.getElementById('post-details-' + postId);
+            const viewCount = document.getElementById('view-count-' + postId);
+
+            if (postDetails.style.display === "none") {
+                postDetails.style.display = "block";
+                fetch('incrementview.php?idpost=' + postId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            viewCount.innerText = data.newViewCount;
+                        }
+                    });
+            } else {
+                postDetails.style.display = "none";
+            }
+        }
+
+        function toggleComments(postId) {
+            const comments = document.getElementById('comments-' + postId);
+            comments.style.display = comments.style.display === "none" ? "block" : "none";
+        }
+       
+
+
+    </script>
+      <script src="script.js"></script>
 </body>
 
 </html>

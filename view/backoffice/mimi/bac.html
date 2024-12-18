@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackOffice - Gestion des Articles</title>
+    <link rel="stylesheet" href="bac.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>DASHBOARD</h2>
+            <nav>
+                <ul>
+                    <li><a href="#">Gestion de Compte</a></li>
+                    <li><a href="#">Gestion de Market</a></li>
+                    <li><a href="#">Gestion de Blog</a></li>
+                    <li><a href="#">Gestion de Météo</a></li>
+                    <li><a href="#">Gestion de Forum</a></li>
+                    <li><a href="#">Gestion de Feedback</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenu principal -->
+        <div class="main-content">
+            <header>
+                <h1>BackOffice - Gestion des Articles</h1>
+            </header>
+
+            <main>
+                <!-- Formulaire pour ajouter ou modifier un article -->
+                <form id="articleForm">
+                    <h2>Ajouter un Article</h2>
+                    <input type="hidden" id="articleId" name="articleId">
+                    <label for="titre">Titre :</label>
+                    <input type="text" id="titre" name="titre" placeholder="Titre de l'article" required>
+                    
+                    <label for="contenu">Contenu :</label>
+                    <textarea id="contenu" name="contenu" rows="5" placeholder="Contenu de l'article"></textarea>
+                    
+                    <button type="submit">Enregistrer</button>
+                </form>
+
+                <!-- Liste des articles sous forme de cartes -->
+                <section id="articleList">
+                    <h2>Liste des Articles</h2>
+                    <div class="cards">
+                        <!-- Exemple de carte d'article -->
+                        <div class="card">
+                            <h3>Exemple d'Article</h3>
+                            <p>Ceci est un exemple d'article pour montrer la présentation sous forme de carte.</p>
+                            <div class="actions">
+                                <a href="#" class="edit">Modifier</a>
+                                <a href="#" class="delete">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

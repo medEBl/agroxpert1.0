@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__ . '/../config.php');
 require_once(__DIR__ . '/../model/forumcommentmodel.php');
-
+require_once 'userc.php';
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 class ForumCommentController
 {
     // List all comments for a specific post
@@ -121,6 +124,58 @@ class ForumCommentController
             return false;
         }
     }
+    
+    // Update emoji reaction
+public function addReaction($idcommentp, $emoji) {
+    $db = config::getConnexion();
+    
+    // Check if the emoji is already set for the comment
+    $sqlCheck = "SELECT emoji, emoji_count FROM forumcomment WHERE idcommentp = :idcommentp";
+    try {
+        $stmt = $db->prepare($sqlCheck);
+        $stmt->execute(['idcommentp' => $idcommentp]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            // If the emoji exists, update the count
+            if ($result['emoji'] === $emoji) {
+                // Increment the count if the same emoji is selected
+                $sqlUpdate = "UPDATE forumcomment SET emoji_count = emoji_count + 1 WHERE idcommentp = :idcommentp";
+            } else {
+                // If a different emoji is selected, set the new emoji and reset the count to 1
+                $sqlUpdate = "UPDATE forumcomment SET emoji = :emoji, emoji_count = 1 WHERE idcommentp = :idcommentp";
+            }
+            $stmt = $db->prepare($sqlUpdate);
+            $stmt->execute(['idcommentp' => $idcommentp, 'emoji' => $emoji]);
+        }
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+  // Count the number of comments for a specific post
+  public function countCommentsByPost($idpost)
+  {
+      $sql = "SELECT COUNT(*) AS commentCount FROM forumcomment WHERE idpostc = :idpost";
+      $db = config::getConnexion();
+
+      try {
+          $stmt = $db->prepare($sql);
+          $stmt->bindValue(':idpost', $idpost, PDO::PARAM_INT);
+          $stmt->execute();
+
+          $result = $stmt->fetch(PDO::FETCH_ASSOC);
+          return $result['commentCount'] ?? 0;
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          return 0; // Return zero if an error occurs
+      }
+  }
+
+
+
+
 
 }
 

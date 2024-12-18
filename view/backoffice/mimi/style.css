@@ -1,0 +1,234 @@
+/* Polices et Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #a7ffeb);
+    color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #004d40; /* Vert sombre */
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #b2dfdb; /* Vert clair */
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: #e0f2f1; /* Blanc légèrement teinté */
+    font-size: 18px;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+    background: #26a69a; /* Vert accent */
+    transform: translateX(10px);
+}
+
+/* Articles Section */
+.article-container {
+    margin-left: 270px; /* Garde l'espace pour la sidebar */
+    padding: 20px;
+    width: calc(100% - 270px);
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.article-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #004d40; /* Vert sombre */
+}
+
+.article-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.article-item img {
+    width: 150px;
+    height: 100px;
+    margin-right: 20px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.article-item h3 {
+    color: #004d40; /* Vert sombre */
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.article-item p {
+    color: #555;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.article-item small {
+    display: block;
+    color: #999;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.article-item a {
+    display: inline-block;
+    margin-right: 10px;
+    color: #26a69a; /* Vert accent */
+    text-decoration: none;
+    border: 1px solid #26a69a;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+.article-item a:hover {
+    background-color: #26a69a; /* Vert accent */
+    color: white;
+}
+
+.article-container .no-articles {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.add-article-btn {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 15px;
+    background-color: #26a69a; /* Vert accent */
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.add-article-btn:hover {
+    background-color: #004d40; /* Vert sombre */
+    color: white;
+}
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+}
+
+/* Conteneur principal de l'article de blog */
+.blog-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Image de l'article */
+.blog-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Titre de l'article */
+.blog-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Métadonnées de l'article (date, catégorie) */
+.blog-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Contenu de l'article */
+.blog-content {
+    margin-top: 20px;
+}
+
+/* Section des commentaires */
+.comment-section {
+    margin-top: 40px;
+}
+
+/* Formulaire de commentaire */
+.comment-form input, .comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comment-form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #45a049;
+}
+
+/* Affichage des commentaires */
+.comment-item {
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}

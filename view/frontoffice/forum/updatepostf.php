@@ -1,6 +1,10 @@
 <?php
+
+session_start();
+
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../model/forummodel.php');
+require_once '../../../controller/userc.php';
 
 $error = "";
 $post = null;
@@ -12,6 +16,9 @@ if (isset($_GET['idpost']) && !empty($_GET['idpost'])) {
 
     // Load the post data for the given ID
     $postController = new ForumpostController();
+    if (!empty($_SESSION['id'])){
+        $Id_UserP =  $_SESSION['id'];
+    }
     $post = $postController->getpostbyid($postId);
 
     if (!$post) {
@@ -39,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             new DateTime(), // Same for updateDateP
             0, // Default views
             0, // Default likes
-            1 // Assume user ID is 1 for now
+            $Id_UserP // Assume user ID is 1 for now
         );
 
         try {
@@ -103,12 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="index.html">Home</a>
-                    <a class="nav-item nav-link" href="about.html">Market</a>
-                    <a class="nav-item nav-link" href="services.html">Blog</a>
-                    <a class="nav-item nav-link" href="products.html">Meteo</a>
-                    <a class="nav-item nav-link" href="products.html">Forum</a>
-                    <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-item nav-link" href="../home/index.php">Home</a>
+                    <a class="nav-item nav-link" href="../marketplace/shop.php">Market</a>
+                    <a class="nav-item nav-link" href="../front blog/taskfront.php">Blog</a>
+                    <a class="nav-item nav-link" href="../meteo/taskfront.php">Meteo</a>
+                    <a class="nav-item nav-link" href="forum.php">Forum</a>
+                    <a class="nav-item nav-link" href="../event/taskfront.php">Event</a>
+                    <a class="nav-item nav-link" href="../frontreclamation&reponse/create.php">Contact us</a>
                 </div>
             </div>
             <div class="login_menu">
@@ -138,12 +146,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -162,12 +171,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -186,12 +196,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -207,6 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <!-- banner section end -->
     </div>
+   <div style="background-color:#f8f9fa;" ><s style="color:#f8f9fa;background-color:#f8f9fa;">.</s></div>
     <style>/* General Container Styling */
 .container {
     display: flex;
@@ -304,63 +316,55 @@ form button:hover {
     <!-- header section end -->
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
-   <div class="container">
-    <div class="main-content">
-        <header>
-            <h1>Update Forum Post</h1>
-        </header>
+    <div class="container">
+        <div class="main-content">
+            <header>
+                <h1>Update Forum Post</h1>
+            </header>
 
-        <!-- Error Message -->
-        <?php if (!empty($error)) : ?>
-            <p style="color: red;"><?= htmlspecialchars($error); ?></p>
-        <?php endif; ?>
+            <!-- Error Message -->
+            <?php if (!empty($error)) : ?>
+                <p style="color: red;"><?= htmlspecialchars($error); ?></p>
+            <?php endif; ?>
 
-        <?php if ($post) : ?>
-            <form id="updatePostForm" action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
-                <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
+            <?php if ($post) : ?>
+                <form id="updateForm" action="updatepostf.php?idpost=<?= htmlspecialchars($post['idpost']); ?>" method="POST">
+    <input type="hidden" name="postId" value="<?= htmlspecialchars($post['idpost']); ?>">
 
-                <!-- User Type Dropdown -->
-                <label for="typeuser">Type d'utilisateur:</label>
-                <select id="typeuser" name="typeuser" required>
-                    <option value="" disabled>Select User Type</option>
-                    <option value="Admin" <?= $post['typeuser'] === 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                    <option value="Member" <?= $post['typeuser'] === 'Member' ? 'selected' : ''; ?>>Member</option>
-                </select>
+    <!-- User Type Dropdown -->
+    <label for="typeuser">Type d'utilisateur:</label>
+    <select id="typeuser" name="typeuser" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Admin" <?= $post['typeuser'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
+        <option value="Member" <?= $post['typeuser'] == 'Member' ? 'selected' : ''; ?>>Member</option>
+    </select>
 
-                <!-- Author Name -->
-                <label for="authorname">Nom de l'Auteur:</label>
-                <input type="text" id="authorname" name="authorname" 
-                       value="<?= htmlspecialchars($post['authorname']); ?>" 
-                       placeholder="Enter author name (5-20 letters)" required>
+    <label for="authorname">Nom de l'Auteur:</label>
+    <input type="text" id="authorname" name="authorname" value="<?= htmlspecialchars($post['authorname']); ?>" required>
 
-                <!-- Post Type Dropdown -->
-                <label for="typepost">Type de Post:</label>
-                <select id="typepost" name="typepost" required>
-                    <option value="" disabled>Select Post Type</option>
-                    <option value="Discussion" <?= $post['typepost'] === 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
-                    <option value="Question" <?= $post['typepost'] === 'Question' ? 'selected' : ''; ?>>Question</option>
-                </select>
+    <!-- Post Type Dropdown -->
+    <label for="typepost">Type de Post:</label>
+    <select id="typepost" name="typepost" required>
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
+        <option value="Discussion" <?= $post['typepost'] == 'Discussion' ? 'selected' : ''; ?>>Discussion</option>
+        <option value="Question" <?= $post['typepost'] == 'Question' ? 'selected' : ''; ?>>Question</option>
+    </select>
 
-                <!-- Post Title -->
-                <label for="titrePost">Titre :</label>
-                <input type="text" id="titrePost" name="titrePost" 
-                       value="<?= htmlspecialchars($post['titleP']); ?>" 
-                       placeholder="Enter a title (5-255 characters)" required>
+    <label for="titrePost">Titre :</label>
+    <input type="text" id="titrePost" name="titrePost" value="<?= htmlspecialchars($post['titleP']); ?>" required>
 
-                <!-- Post Content -->
-                <label for="contenuPost">Contenu :</label>
-                <textarea id="contenuPost" name="contenuPost" rows="5" required 
-                          placeholder="Enter content (minimum 20 characters)"><?= htmlspecialchars($post['contentP']); ?></textarea>
+    <label for="contenuPost">Contenu :</label>
+    <textarea id="contenuPost" name="contenuPost" rows="5" required><?= htmlspecialchars($post['contentP']); ?></textarea>
 
-                <!-- Submit Button -->
-                <button type="submit">Update Post</button>
-            </form>
-        <?php else : ?>
-            <p>No post found to update.</p>
-        <?php endif; ?>
+    <button type="submit">Update Post</button>
+    <div id="errorMessages" style="color: red; margin-top: 10px;"></div>
+</form>
+
+            <?php else : ?>
+                <p>No post found to update.</p>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
-
 
 
 
@@ -382,11 +386,12 @@ form button:hover {
                     <h2 class="useful_text">Services</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">MarketPlace</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Weather Alerts</a></li>
-                            <li class="active"><a href="#">Forum</a></li>
-                            <li><a href="#">And more</a></li>
+                        <li><a href="../marketplace/shop.php">MarketPlace</a></li>
+                            <li><a href="../front blog/taskfront.php">Blogs</a></li>
+                            <li><a href="../meteo/taskfront.php">Weather Alerts</a></li>
+                            <li class="active"><a href="forum.php">Forum</a></li>
+                            <li ><a href="../event/taskfront.php">Event</a></li>
+                            <li><a href="../frontreclamation&reponse/create.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -394,11 +399,11 @@ form button:hover {
                     <h2 class="useful_text">Our Products</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">Seasonal Produce</a></li>
-                            <li><a href="#">Organic Foods</a></li>
-                            <li><a href="#">Gardening Supplies</a></li>
-                            <li><a href="#">Meal Kits</a></li>
-                            <li><a href="#">And more</a></li>
+                            <li><a href="../marketplace/shop.php">Seasonal Produce</a></li>
+                            <li><a href="../marketplace/shop.php">Organic Foods</a></li>
+                            <li><a href="../marketplace/shop.php">Gardening Supplies</a></li>
+                            <li><a href="../marketplace/shop.php">Meal Kits</a></li>
+                            <li><a href="../marketplace/shop.php">And more</a></li>
                         </ul>
                     </div>
                 </div>
@@ -430,8 +435,26 @@ form button:hover {
       </div>
       <!-- copyright section end -->    
       <!-- Javascript files-->
-     
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <!-- sidebar -->
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+      <!-- javascript --> 
       <script src="script.js"></script>
+      <script src="js/owl.carousel.js"></script>
+      <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+      <script>
+        function example() {
+  if (true) {
+    console.log('Hello');
+  } // Closing the 'if' block
+} // Closing the function block
 
+            
+      </script>
    </body>
 </html>

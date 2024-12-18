@@ -1,0 +1,170 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #a8d5a5; /* Green background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    padding-top: 60px; /* Add padding to the top for the fixed navbar */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover; /* This makes the image cover the entire page */
+    padding: 0;
+    padding-top: 70px;
+}
+/* Header Styling */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10%;
+    background-color: #539f57;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-right: auto;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li {
+    display: inline;
+}
+
+header nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s;
+}
+
+header nav ul li a:hover {
+    color: #a5d6a7;
+}
+/* Navigation Bar */
+nav {
+    width: 100%;
+    background-color: #4caf50; /* Dark green background */
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover {
+    background-color: #388e3c;
+    border-radius: 5px;
+}
+
+/* Section styles */
+section {
+    padding: 40px 20px; /* Added padding for all sections */
+    width: 100%;
+    text-align: center;
+}
+
+/* Home Section */
+#home {
+    background-color: #ffffff;
+    padding: 40px;
+}
+
+/* Weather Widget styles */
+.weather-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+}
+
+.weather-widget {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 250px;
+}
+
+.weather-widget h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #4caf50;
+}
+
+.weather-icon {
+    font-size: 50px;
+    margin: 20px 0;
+}
+
+.temperature {
+    font-size: 36px;
+    color: #4caf50;
+}
+
+.condition {
+    font-size: 18px;
+    color: #757575;
+}
+
+.details {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.description {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #4a4a4a;
+    text-align: left;
+}
+
+.alert {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #
+}

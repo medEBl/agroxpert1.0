@@ -1,10 +1,14 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
+require_once '../../../controller/userc.php';
 
 $error = "";
 $post = null;
 $postController = new ForumpostController();
-$Id_UserP = 1; // Assume user ID for testing
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+} // Assume user ID for testing
 
 if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["typeuser"]) && isset($_POST["authorname"]) && isset($_POST["typepost"])) {
     if (!empty($_POST["titrePost"]) && !empty($_POST["contenuPost"]) && !empty($_POST["typeuser"]) && !empty($_POST["authorname"]) && !empty($_POST["typepost"])) {
@@ -78,12 +82,13 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="index.html">Home</a>
-                    <a class="nav-item nav-link" href="about.html">Market</a>
-                    <a class="nav-item nav-link" href="services.html">Blog</a>
-                    <a class="nav-item nav-link" href="products.html">Meteo</a>
-                    <a class="nav-item nav-link" href="products.html">Forum</a>
-                    <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-item nav-link" href="../home/index.php">Home</a>
+                    <a class="nav-item nav-link" href="../marketplace/shop.php">Market</a>
+                    <a class="nav-item nav-link" href="../front blog/taskfront.php">Blog</a>
+                    <a class="nav-item nav-link" href="../meteo/taskfront.php">Meteo</a>
+                    <a class="nav-item nav-link" href="forum.php">Forum</a>
+                    <a class="nav-item nav-link" href="../event/taskfront.php">Event</a>
+                    <a class="nav-item nav-link" href="../frontreclamation&reponse/create.php">Contact us</a>
                 </div>
             </div>
             <div class="login_menu">
@@ -113,12 +118,13 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -137,12 +143,13 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -161,12 +168,13 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -182,6 +190,7 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
         </div>
         <!-- banner section end -->
     </div>
+   <div style="background-color:#f8f9fa;" ><s style="color:#f8f9fa;background-color:#f8f9fa;">.</s></div>
     <!-- header section end -->
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
@@ -200,34 +209,31 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
     <!-- User Type Dropdown -->
     <label for="typeuser">Type d'utilisateur:</label>
     <select id="typeuser" name="typeuser" required>
-        <option value="">Select User Type</option> <!-- Invalid default -->
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
         <option value="Admin">Admin</option>
         <option value="Member">Member</option>
     </select>
 
-    <!-- Author Name -->
     <label for="authorname">Nom de l'Auteur:</label>
     <input type="text" id="authorname" name="authorname" placeholder="Nom de l'auteur" required>
 
     <!-- Post Type Dropdown -->
     <label for="typepost">Type de Post:</label>
     <select id="typepost" name="typepost" required>
-        <option value="">Select Post Type</option> <!-- Invalid default -->
+        <option value="">Choose...</option> <!-- 'Choose' option added -->
         <option value="Discussion">Discussion</option>
         <option value="Question">Question</option>
     </select>
 
-    <!-- Title -->
     <label for="titrePost">Titre :</label>
     <input type="text" id="titrePost" name="titrePost" placeholder="Titre du post" required>
 
-    <!-- Content -->
     <label for="contenuPost">Contenu :</label>
     <textarea id="contenuPost" name="contenuPost" rows="5" placeholder="Contenu du post" required></textarea>
 
     <button type="submit">Enregistrer</button>
+    <div id="errorMessages" style="color: red; margin-top: 10px;"></div>
 </form>
-
         </div>
     </div>
 <style>/* General Container Styling */
@@ -340,11 +346,12 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
                     <h2 class="useful_text">Services</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">MarketPlace</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Weather Alerts</a></li>
-                            <li class="active"><a href="#">Forum</a></li>
-                            <li><a href="#">And more</a></li>
+                        <li><a href="../marketplace/shop.php">MarketPlace</a></li>
+                            <li><a href="../front blog/taskfront.php">Blogs</a></li>
+                            <li><a href="../meteo/taskfront.php">Weather Alerts</a></li>
+                            <li class="active"><a href="forum.php">Forum</a></li>
+                            <li ><a href="../event/taskfront.php">Event</a></li>
+                            <li><a href="../frontreclamation&reponse/create.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -352,11 +359,11 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
                     <h2 class="useful_text">Our Products</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">Seasonal Produce</a></li>
-                            <li><a href="#">Organic Foods</a></li>
-                            <li><a href="#">Gardening Supplies</a></li>
-                            <li><a href="#">Meal Kits</a></li>
-                            <li><a href="#">And more</a></li>
+                            <li><a href="../marketplace/shop.php">Seasonal Produce</a></li>
+                            <li><a href="../marketplace/shop.php">Organic Foods</a></li>
+                            <li><a href="../marketplace/shop.php">Gardening Supplies</a></li>
+                            <li><a href="../marketplace/shop.php">Meal Kits</a></li>
+                            <li><a href="../marketplace/shop.php">And more</a></li>
                         </ul>
                     </div>
                 </div>
@@ -388,9 +395,27 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
       </div>
       <!-- copyright section end -->    
       <!-- Javascript files-->
-     
-       
-       <script src="script.js"></script>
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <!-- sidebar -->
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+      <!-- javascript --> 
+      <script src="script.js"></script>
+      <script src="js/owl.carousel.js"></script>
+      <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+      <script>
+        function example() {
+  if (true) {
+    console.log('Hello');
+  } // Closing the 'if' block
+} // Closing the function block
 
+            
+      </script>
+      <script>scr=""</script>
    </body>
 </html>
