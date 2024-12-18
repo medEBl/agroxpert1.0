@@ -1,6 +1,10 @@
 <?php
+
+session_start();
+
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../model/forummodel.php');
+require_once '../../../controller/userc.php';
 
 $error = "";
 $post = null;
@@ -12,6 +16,9 @@ if (isset($_GET['idpost']) && !empty($_GET['idpost'])) {
 
     // Load the post data for the given ID
     $postController = new ForumpostController();
+    if (!empty($_SESSION['id'])){
+        $Id_UserP =  $_SESSION['id'];
+    }
     $post = $postController->getpostbyid($postId);
 
     if (!$post) {
@@ -39,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             new DateTime(), // Same for updateDateP
             0, // Default views
             0, // Default likes
-            1 // Assume user ID is 1 for now
+            $Id_UserP // Assume user ID is 1 for now
         );
 
         try {
@@ -103,12 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="index.html">Home</a>
-                    <a class="nav-item nav-link" href="about.html">Market</a>
-                    <a class="nav-item nav-link" href="services.html">Blog</a>
-                    <a class="nav-item nav-link" href="products.html">Meteo</a>
-                    <a class="nav-item nav-link" href="products.html">Forum</a>
-                    <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-item nav-link" href="../home/index.php">Home</a>
+                    <a class="nav-item nav-link" href="../marketplace/shop.php">Market</a>
+                    <a class="nav-item nav-link" href="../front blog/taskfront.php">Blog</a>
+                    <a class="nav-item nav-link" href="../meteo/taskfront.php">Meteo</a>
+                    <a class="nav-item nav-link" href="forum.php">Forum</a>
+                    <a class="nav-item nav-link" href="../event/taskfront.php">Event</a>
+                    <a class="nav-item nav-link" href="../frontreclamation&reponse/create.php">Contact us</a>
                 </div>
             </div>
             <div class="login_menu">
@@ -138,12 +146,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -162,12 +171,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -186,12 +196,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -207,6 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <!-- banner section end -->
     </div>
+   <div style="background-color:#f8f9fa;" ><s style="color:#f8f9fa;background-color:#f8f9fa;">.</s></div>
     <style>/* General Container Styling */
 .container {
     display: flex;
@@ -374,11 +386,12 @@ form button:hover {
                     <h2 class="useful_text">Services</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">MarketPlace</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Weather Alerts</a></li>
-                            <li class="active"><a href="#">Forum</a></li>
-                            <li><a href="#">And more</a></li>
+                        <li><a href="../marketplace/shop.php">MarketPlace</a></li>
+                            <li><a href="../front blog/taskfront.php">Blogs</a></li>
+                            <li><a href="../meteo/taskfront.php">Weather Alerts</a></li>
+                            <li class="active"><a href="forum.php">Forum</a></li>
+                            <li ><a href="../event/taskfront.php">Event</a></li>
+                            <li><a href="../frontreclamation&reponse/create.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -386,11 +399,11 @@ form button:hover {
                     <h2 class="useful_text">Our Products</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">Seasonal Produce</a></li>
-                            <li><a href="#">Organic Foods</a></li>
-                            <li><a href="#">Gardening Supplies</a></li>
-                            <li><a href="#">Meal Kits</a></li>
-                            <li><a href="#">And more</a></li>
+                            <li><a href="../marketplace/shop.php">Seasonal Produce</a></li>
+                            <li><a href="../marketplace/shop.php">Organic Foods</a></li>
+                            <li><a href="../marketplace/shop.php">Gardening Supplies</a></li>
+                            <li><a href="../marketplace/shop.php">Meal Kits</a></li>
+                            <li><a href="../marketplace/shop.php">And more</a></li>
                         </ul>
                     </div>
                 </div>

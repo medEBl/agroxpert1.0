@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__ . '/../config.php');
 require_once(__DIR__ . '/../model/forumcommentmodel.php');
-
+require_once 'userc.php';
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 class ForumCommentController
 {
     // List all comments for a specific post

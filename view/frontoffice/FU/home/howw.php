@@ -1,3 +1,26 @@
+<?php
+require_once __DIR__ . '/../../../../controller/userc.php';
+session_start();
+if (!isset($_SESSION['id'])) {
+    header('Location: ../index.php');
+    exit();
+}
+$userController = new userc();
+$userData = null; // Avoid undefined variable issues
+
+if (!empty($_SESSION['id'])) { // Match the session variable name
+    $id = $_SESSION['id'];
+    $userData = $userController->getUserById($id);
+    if ($userData) {
+        $username = htmlspecialchars($userData['name']);
+    } else {
+        $username = "Guest"; // Fallback if user not found
+    }
+} else {
+    $username = "Guest"; // Fallback if not logged in
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,11 +77,13 @@
             </div>
             <div class="login_menu">
                 <ul>
-                    <li><a href="#">LOGIN</a></li>
+                    <li><a href="../create.php">LOGIN</a></li>
                     <li>
                         <a href="#"><img src="images/search-icon.png"></a>
                     </li>
                 </ul>
+                <h1 style="color:white;">Bienvenue, <?php echo $username; ?></h1>
+<a style="color:white;" href="../logout.php">Déconnexion</a>
             </div>
         </nav>
         <!-- banner section end -->

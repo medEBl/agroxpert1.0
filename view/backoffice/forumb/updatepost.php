@@ -1,11 +1,15 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../model/forummodel.php');
+require_once '../../../controller/userc.php';
+
 
 $error = "";
 $post = null;
 $postId = null;
-
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];} // Inclus pour la mise à jour des ventes
 // Step 1: Check if `idpost` is passed in the URL
 if (isset($_GET['idpost']) && !empty($_GET['idpost'])) {
     $postId = $_GET['idpost'];

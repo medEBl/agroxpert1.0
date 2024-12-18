@@ -1,10 +1,18 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
+require_once '../../../controller/userc.php';
 
 // Instantiate controllers
 $forumpostC = new ForumpostController();
 $forumcommentC = new ForumCommentController();
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 
 // Get all posts
 $list = $forumpostC->listpost();
@@ -55,12 +63,13 @@ $list = $forumpostC->listpost();
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="index.html">Home</a>
-                    <a class="nav-item nav-link" href="about.html">Market</a>
-                    <a class="nav-item nav-link" href="services.html">Blog</a>
-                    <a class="nav-item nav-link" href="products.html">Meteo</a>
-                    <a class="nav-item nav-link" href="products.html">Forum</a>
-                    <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-item nav-link" href="../home/index.php">Home</a>
+                    <a class="nav-item nav-link" href="../marketplace/shop.php">Market</a>
+                    <a class="nav-item nav-link" href="../front blog/taskfront.php">Blog</a>
+                    <a class="nav-item nav-link" href="../meteo/taskfront.php">Meteo</a>
+                    <a class="nav-item nav-link" href="forum.php">Forum</a>
+                    <a class="nav-item nav-link" href="../event/taskfront.php">Event</a>
+                    <a class="nav-item nav-link" href="../frontreclamation&reponse/create.php">Contact us</a>
                 </div>
             </div>
             <div class="login_menu">
@@ -90,12 +99,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -114,12 +124,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -138,12 +149,13 @@ $list = $forumpostC->listpost();
                             </div>
                             <div class="custum_menu">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">Market</a></li>
-                                    <li><a href="services.html">Blog</a></li>
-                                    <li><a href="products.html">Meteo</a></li>
-                                    <li class="active"><a href="products.html">Forum</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="../home/index.php">Home</a></li>
+                                    <li><a href="../marketplace/shop.php">Market</a></li>
+                                    <li><a href="../front blog/taskfront.php">Blog</a></li>
+                                    <li><a href="../meteo/taskfront.php">Meteo</a></li>
+                                    <li class="active"><a href="forum.php">Forum</a></li>
+                                    <li ><a href="../event/taskfront.php">EVent</a></li>
+                                    <li><a href="../frontreclamation&reponse/create.php">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -159,7 +171,7 @@ $list = $forumpostC->listpost();
         </div>
         <!-- banner section end -->
     </div>
-    <!-- header section end -->
+   <div style="background-color:#f8f9fa;" ><s style="color:#f8f9fa;background-color:#f8f9fa;">.</s></div>    <!-- header section end -->
     <!-- Forum section start  (el header wel footer mayetmashoush) -->
   <!-- Forum section start  (el header wel footer mayetmashoush) -->
 
@@ -268,7 +280,7 @@ $list = $forumpostC->listpost();
                                                     <?php endif; ?>
                                                     <div class="comment-reactions">
     
-    <?php
+                                                    <?php
     // List of all possible emojis and their default count (0)
     $reaction_types = [
         'heart' => '❤️',
@@ -317,9 +329,8 @@ $list = $forumpostC->listpost();
 
 </style>
                                                         
-<form action="reactcomment.php" method="POST" id="reaction-form">
+<form action="reactcomment.php" method="POST" id="reaction-form-<?= $comment['idcommentp']; ?>">
     <input type="hidden" name="idcommentp" value="<?= $comment['idcommentp']; ?>">
-    <label for="emoji">React:</label>
     <div class="emoji-container">
         <span class="emoji" data-emoji="heart">❤️</span>
         <span class="emoji" data-emoji="thumbs_up">👍</span>
@@ -328,26 +339,36 @@ $list = $forumpostC->listpost();
     </div>
 </form>
 
+
 <script>
-    // When an emoji is clicked, the form will submit with the selected emoji
-    document.querySelectorAll('.emoji').forEach(function(emojiElement) {
+   // Attach event listeners for all emojis in the current comment
+document.querySelectorAll('[id^="reaction-form-"]').forEach(function(form) {
+    form.querySelectorAll('.emoji').forEach(function(emojiElement) {
         emojiElement.addEventListener('click', function() {
-            // Get the emoji value from the data-emoji attribute
+            // Get the emoji value
             var emoji = emojiElement.getAttribute('data-emoji');
-            
-            // Set the emoji value to the hidden input field
-            var form = document.getElementById('reaction-form');
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'emoji';
-            input.value = emoji;
-            form.appendChild(input);
-            
+
+            // Check if the hidden emoji input exists in the form
+            let emojiInput = form.querySelector('input[name="emoji"]');
+            if (!emojiInput) {
+                // If not, create a new hidden input
+                emojiInput = document.createElement('input');
+                emojiInput.type = 'hidden';
+                emojiInput.name = 'emoji';
+                form.appendChild(emojiInput);
+            }
+
+            // Set the emoji value
+            emojiInput.value = emoji;
+
             // Submit the form
             form.submit();
         });
     });
+});
+
 </script>
+
 
 
                                                 </div>
@@ -777,11 +798,12 @@ form button:hover {
                     <h2 class="useful_text">Services</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">MarketPlace</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Weather Alerts</a></li>
-                            <li class="active"><a href="#">Forum</a></li>
-                            <li><a href="#">And more</a></li>
+                        <li><a href="../marketplace/shop.php">MarketPlace</a></li>
+                            <li><a href="../front blog/taskfront.php">Blogs</a></li>
+                            <li><a href="../meteo/taskfront.php">Weather Alerts</a></li>
+                            <li class="active"><a href="forum.php">Forum</a></li>
+                            <li ><a href="../event/taskfront.php">Event</a></li>
+                            <li><a href="../frontreclamation&reponse/create.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -789,11 +811,11 @@ form button:hover {
                     <h2 class="useful_text">Our Products</h2>
                     <div class="footer_links">
                         <ul>
-                            <li><a href="#">Seasonal Produce</a></li>
-                            <li><a href="#">Organic Foods</a></li>
-                            <li><a href="#">Gardening Supplies</a></li>
-                            <li><a href="#">Meal Kits</a></li>
-                            <li><a href="#">And more</a></li>
+                            <li><a href="../marketplace/shop.php">Seasonal Produce</a></li>
+                            <li><a href="../marketplace/shop.php">Organic Foods</a></li>
+                            <li><a href="../marketplace/shop.php">Gardening Supplies</a></li>
+                            <li><a href="../marketplace/shop.php">Meal Kits</a></li>
+                            <li><a href="../marketplace/shop.php">And more</a></li>
                         </ul>
                     </div>
                 </div>

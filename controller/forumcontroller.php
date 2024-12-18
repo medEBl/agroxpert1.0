@@ -1,6 +1,10 @@
 <?php
 require_once(__DIR__ . '/../config.php');
 require_once(__DIR__ . '/../model/forummodel.php');
+require_once 'userc.php';
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
 
 class ForumpostController
 {

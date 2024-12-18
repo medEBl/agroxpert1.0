@@ -38,7 +38,7 @@ function validateForm(event) {
     }
 
     // Content validation (min 10, max 200 characters)
-    if (content.length < 10 || content.length > 200) {
+    if (content.length < 10 || content.length > 2000) {
         errorMessages.push("Content must be between 10 and 200 characters.");
     }
 

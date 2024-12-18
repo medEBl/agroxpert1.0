@@ -1,10 +1,16 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
+require_once(__DIR__ . '/../../../controller/userc.php');
 
 $error = "";
 $post = null;
 $postController = new ForumpostController();
-$Id_UserP = 1; // Assume user ID for testing
+
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+ // Assume user ID for testing
 
 if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["typeuser"]) && isset($_POST["authorname"]) && isset($_POST["typepost"])) {
     if (!empty($_POST["titrePost"]) && !empty($_POST["contenuPost"]) && !empty($_POST["typeuser"]) && !empty($_POST["authorname"]) && !empty($_POST["typepost"])) {
@@ -43,6 +49,7 @@ if (isset($_POST["titrePost"]) && isset($_POST["contenuPost"]) && isset($_POST["
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    
     <div class="container">
         <div class="main-content">
             <header>

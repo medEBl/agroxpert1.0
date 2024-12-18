@@ -1,10 +1,14 @@
 <?php
+session_start();
 // Include necessary files
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
-
+require_once '../../../controller/userc.php';
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];} 
 // Check if we have a comment ID and fetch it for editing
 if (isset($_GET['idcommentp'])) {
     $idcommentp = $_GET['idcommentp'];
+    
 
     // Instantiate the controller
     $forumCommentController = new ForumCommentController();

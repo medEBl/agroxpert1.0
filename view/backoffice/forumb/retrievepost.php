@@ -1,11 +1,17 @@
 <?php
+session_start();
 require_once(__DIR__ . '/../../../controller/forumcontroller.php');
 require_once(__DIR__ . '/../../../controller/forumcommentcontroller.php');
-
+require_once(__DIR__ . '/../../../controller/userc.php');
 // Instantiate controllers
 $forumpostC = new ForumpostController();
 $forumcommentC = new ForumCommentController();
-
+if (!empty($_SESSION['id'])){
+    $Id_UserP =  $_SESSION['id'];
+}
+if (!empty($_SESSION['id'])){
+    $AuthoridC =  $_SESSION['id'];
+}
 // Get all posts
 $list = $forumpostC->listpost();
 ?>
@@ -28,8 +34,13 @@ $list = $forumpostC->listpost();
             <h2>DASHBOARD</h2>
             <nav>
                 <ul>
-                    <li><a href="#">Gestion de Forum</a></li>
-                    <!-- Add other sidebar items here -->
+                <li><a href="../user/gestion.php">Gestion de Compte</a></li>
+                    <li><a href="../marketplace/productList.php">Gestion de Market</a></li>
+                    <li><a href="../mimi/bloglist.php">Gestion de Blog</a></li>
+                    <li><a href="../back office/listesmeteo.php">Gestion de Météo</a></li>
+                    <li><a href="retrievepost.php">Gestion de Forum</a></li>
+                    <li><a href="../backreclamation&reponse/admin.php">Gestion de Feedback</a></li>
+                    <li><a href="../eventt/listevent.php">Gestion d'event</a></li>
                 </ul>
             </nav>
         </aside>
