@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - meteo</title>
+    <link rel="stylesheet" href="styless.css">
+</head>
+<body>
+
+<!-- Header Section -->
+<header>
+    <header>
+    
+    
+        <nav>
+            <ul>
+                <img src="logox.png" alt="logo de site" id="logox"  width="100" height="auto">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Market</a></li>
+                <li><a href="#">Blog</a></li>
+                <li>
+                    <a href="#">Meteo</a>
+                </li>
+                <li>
+                    <a href="#">Forum</a>
+                </li>
+                <li>
+                    <a href="#">feedback</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Admin Panel - Gestion de la Météo</h1>
+</header>
+
+<!-- Main Content Section -->
+<main>
+    <h2>Modifier les Prévisions Météo</h2>
+
+    <!-- Form Section for Weather Update -->
+    <fieldset>
+        <legend>Mise à jour des données météorologiques</legend>
+
+        <div>
+            <label for="location">Lieu :</label>
+            <input type="text" id="location" placeholder="Entrez le lieu">
+        </div>
+
+        <div>
+            <label for="temperature">Température (°C) :</label>
+            <input type="text" id="temperature" placeholder="Température en °C">
+        </div>
+
+        <div>
+            <label for="condition">Condition météorologique :</label>
+            <input type="text" id="condition" placeholder="Condition (Ensoleillé, Nuageux, etc.)">
+        </div>
+
+        <div>
+            <label for="description">Description :</label>
+            <textarea id="description" placeholder="Entrez la description détaillée de la météo" rows="4"></textarea>
+        </div>
+
+        <div>
+            <label for="alert">Alerte :</label>
+            <input type="text" id="alert" placeholder="Entrez les alertes éventuelles (e.g., Fortes chaleurs)">
+        </div>
+
+        <button type="submit">Mettre à jour la météo</button>
+    </fieldset>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <p>&copy; 2023 AgroXpert | Tous droits réservés</p>
+</footer>
+
+</body>
+</html>
